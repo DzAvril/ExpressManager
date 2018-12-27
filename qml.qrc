@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>InHouse.qml</file>
+        <file>OutHouse.qml</file>
+        <file>Statistics.qml</file>
+        <file>QueryExpress.qml</file>
+        <file>funny.jpg</file>
+    </qresource>
+</RCC>
