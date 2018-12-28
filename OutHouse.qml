@@ -3,7 +3,7 @@ import QtQuick.Controls 2.4
 import DbOperate 1.0
 import QtMultimedia 5.9
 import QtQuick.Layouts 1.3
-//import opencv.lib 1.0
+import opencv.lib 1.0
 
 Item {
     id: outHoustPage
@@ -12,26 +12,28 @@ Item {
         id : dbOperate
     }
 
-//    FaceDetectFilter
-//    {
-//        id: faceDetectFilter
-//        onObjectDetected:
-//        {
-//            if((w == 0) || (h == 0))
-//            {
-//                smile.visible = false;
-//            }
-//            else
-//            {
-//                var r = video.mapNormalizedRectToItem(Qt.rect(x, y, w, h));
-//                smile.x = r.x;
-//                smile.y = r.y;
-//                smile.width = r.width;
-//                smile.height = r.height;
-//                smile.visible = true;
-//            }
-//        }
-//    }
+    FaceDetectFilter
+    {
+        id: faceDetectFilter
+        onObjectDetected:
+        {
+            if((w == 0) || (h == 0))
+            {
+                faceBoard.visible = false;
+                console.log("face not detected");
+            }
+            else
+            {
+                var r = videoOut.mapNormalizedRectToItem(Qt.rect(x, y, w, h));
+                faceBoard.x = r.x;
+                faceBoard.y = r.y;
+                faceBoard.width = r.width;
+                faceBoard.height = r.height;
+                faceBoard.visible = true;
+                console.log("face detected");
+            }
+        }
+    }
 
     property alias outHoustPageHeight: outHoustPage.height
     property alias outHoustPageWidth: outHoustPage.width
@@ -227,14 +229,16 @@ Item {
                 anchors.topMargin: 5
                 source: camera
                 focus : visible // to receive focus and capture key events when visible
-//                filters: [faceDetectFilter]
+                filters: [faceDetectFilter]
 
-//                Image
-//                {
-//                    id: smile
-//                    source: "qrc:/funny.jpg"
-//                    visible: false
-//                }
+                Rectangle
+                {
+                    id: faceBoard
+                    color: "#00000000"
+
+                    visible: false
+                    border.color: "white"
+                }
             }
 
             Image {

@@ -7,7 +7,8 @@
 #include <QTemporaryFile>
 #include <QMutex>
 
-class FaceDetectFilter : QAbstractVideoFilter {
+class FaceDetectFilter : public QAbstractVideoFilter {
+    Q_OBJECT
   public:
     QVideoFilterRunnable *createFilterRunnable();
   signals:
