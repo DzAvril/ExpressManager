@@ -23,7 +23,8 @@ SOURCES += \
     dboperate.cpp \
     speech.cpp \
     fileio.cpp \
-    facedetectfilter.cpp
+    facedetectfilter.cpp \
+    commonhelper.cpp
 
 RESOURCES += qml.qrc
 
@@ -63,7 +64,8 @@ HEADERS += \
     config.h \
     speech.h \
     fileio.h \
-    facedetectfilter.h
+    facedetectfilter.h \
+    commonhelper.h
 
 #qml_scenes.depends = $$PWD/resources/scene1.qml $$PWD/resources/scene2.qml ...
 #qml_scenes.commands =

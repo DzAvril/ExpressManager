@@ -7,6 +7,7 @@ import opencv.lib 1.0
 
 Item {
     id: outHoustPage
+    property bool isFaceDetected: false
 
     DbOperate{
         id : dbOperate
@@ -20,7 +21,8 @@ Item {
             if((w == 0) || (h == 0))
             {
                 faceBoard.visible = false;
-                console.log("face not detected");
+                isFaceDetected = false;
+//                console.log("face not detected");
             }
             else
             {
@@ -30,7 +32,8 @@ Item {
                 faceBoard.width = r.width;
                 faceBoard.height = r.height;
                 faceBoard.visible = true;
-                console.log("face detected");
+                isFaceDetected = true;
+//                console.log("face detected");
             }
         }
     }
@@ -39,8 +42,12 @@ Item {
     property alias outHoustPageWidth: outHoustPage.width
 
     function captureImage(photoName) {
-//        speech.say("开始拍照")
-        camera.imageCapture.captureToLocation(fileIo.getTempPath() + photoName)
+        speech.say("开始拍照")
+        while(!isFaceDetected) {
+            speech.say("未检测到人脸，请看向摄像头");
+            commonHelper.delay(500);
+        } 
+        camera.imageCapture.captureToLocation(fileIo.getTempPath() + photoName);
     }
 
     Row {
@@ -206,7 +213,7 @@ Item {
                 imageCapture {
                     onImageCaptured : {
                         photoPreview.source = preview  // Show the preview in an Image
-//                        speech.say("拍照成功")
+                        speech.say("拍照成功")
                     }
                     onImageSaved: {
                         if(!dbOperate.updateItemPhotoUrl(barcode.text, camera.imageCapture.capturedImagePath)) {
