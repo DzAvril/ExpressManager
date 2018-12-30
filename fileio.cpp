@@ -4,24 +4,20 @@
 #include <QGuiApplication>
 #include "config.h"
 
-FileIo::FileIo(QObject *parent) : QObject(parent)
-{
+FileIo::FileIo(QObject *parent) : QObject(parent) {
 
 }
 
-FileIo::FileIo(const FileIo &)
-{
+FileIo::FileIo(const FileIo &) {
 
 }
 
-FileIo &FileIo::operator=(const FileIo &)
-{
+FileIo &FileIo::operator=(const FileIo &) {
 
 }
 
 FileIo *FileIo::instance = new FileIo();
-bool FileIo::IsPathExist(const QString &path)
-{
+bool FileIo::IsPathExist(const QString &path) {
     qDebug() << "Check is path " << path << "exist";
     QDir dir(path);
     if (dir.exists()) {
@@ -30,8 +26,7 @@ bool FileIo::IsPathExist(const QString &path)
     return false;
 }
 
-bool FileIo::CreateDir(const QString &path)
-{
+bool FileIo::CreateDir(const QString &path) {
     qDebug() << "Create path " << path;
     bool result = true;
     QDir dir(path);
@@ -44,18 +39,19 @@ bool FileIo::CreateDir(const QString &path)
 }
 
 
-FileIo *FileIo::getInstance()
-{
+FileIo *FileIo::getInstance() {
     return instance;
 }
 
-const QString FileIo::getTempPath()
-{
+const QString FileIo::getTempPath() {
     return QGuiApplication::applicationDirPath() + TEMP_PATH;
 }
 
-bool FileIo::DeleteFile(const QString &path)
-{
-    QFile file (path);
+bool FileIo::DeleteFile(const QString &path) {
+    QFile file(path);
     return file.remove();
+}
+
+const QString FileIo::GetCurrentPath() {
+    return QGuiApplication::applicationDirPath();
 }

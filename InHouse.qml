@@ -17,7 +17,6 @@ Page {
                 signal sendBarcodeChanged()
                 Keys.onReturnPressed: {
                     queryExpInfo.queryByBarcode(text)
-                    console.log("send query barcode signal")
                 }
             }
         }

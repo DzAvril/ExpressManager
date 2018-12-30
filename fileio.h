@@ -3,24 +3,24 @@
 
 #include <QObject>
 
-class FileIo : public QObject
-{
+class FileIo : public QObject {
     Q_OBJECT
-public:
+  public:
     bool IsPathExist(const QString &path);
     bool CreateDir(const QString &path);
     static FileIo *getInstance();
     Q_INVOKABLE const QString getTempPath();
     bool DeleteFile(const QString &path);
-private:
+    static const QString GetCurrentPath();
+  private:
     explicit FileIo(QObject *parent = nullptr);
     FileIo(const FileIo &);
     FileIo &operator=(const FileIo &);
     static FileIo *instance;
 
-signals:
+  signals:
 
-public slots:
+  public slots:
 };
 
 #endif // FILEIO_H

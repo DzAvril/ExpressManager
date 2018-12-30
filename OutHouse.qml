@@ -44,8 +44,8 @@ Item {
     function captureImage(photoName) {
         speech.say("开始拍照")
         while(!isFaceDetected) {
-            speech.say("未检测到人脸，请看向摄像头");
-            commonHelper.delay(500);
+            speech.say("未检测到人脸");
+            commonHelper.delay(5000);
         } 
         camera.imageCapture.captureToLocation(fileIo.getTempPath() + photoName);
     }
