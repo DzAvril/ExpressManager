@@ -18,4 +18,8 @@ const QString ALREADY_EXIST = "该快递已出库";
 const QString BARCODE_EMPTY = "快递单号不能为空";
 const QString SAVE_PHOTO_FAIL = "保存照片失败，请重新拍照";
 
+//barcode
+static const char *BARCODE_READER_PY_MODULE = "barcodeReader";
+static const char *BARCODE_READER_PY_FUN = "readBarcode";
+
 #endif // CONFIG_H

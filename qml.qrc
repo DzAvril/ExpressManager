@@ -6,5 +6,6 @@
         <file>Statistics.qml</file>
         <file>QueryExpress.qml</file>
         <file>funny.jpg</file>
+        <file>resource/faceclassifier.xml</file>
     </qresource>
 </RCC>

@@ -24,14 +24,12 @@ ApplicationWindow {
             text: "出库"
             background: Rectangle {
                 color: bar.currentIndex === 0 ? "orange" : "lightblue"
-                radius: 5
             }
         }
         TabButton {
             text: "统计"
             background: Rectangle {
                 color: bar.currentIndex === 1 ? "orange" : "lightblue"
-                radius: 5
             }
         }
     }

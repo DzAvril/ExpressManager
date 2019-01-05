@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<RCC>
+    <qresource prefix="/">
+        <file alias="funny.jpg">funny.jpg</file>
+        <file alias="resource/faceclassifier.xml">resource/faceclassifier.xml</file>
+    </qresource>
+</RCC>

@@ -1,5 +1,4 @@
 #include "facedetectfilter.h"
-#include "fileio.h"
 
 cv::CascadeClassifier classifier;
 
@@ -27,7 +26,7 @@ QVideoFrame FaceDetectFilterRunnable::run(QVideoFrame *input, const QVideoSurfac
         cv::flip(mat, mat, 0);
 
         if (classifier.empty()) {
-            QFile xml(FileIo::GetCurrentPath() + "/../" + "resource/faceclassifier.xml");
+            QFile xml(":resource/faceclassifier.xml");
             if (xml.open(QFile::ReadOnly | QFile::Text)) {
                 QTemporaryFile temp;
                 if (temp.open()) {

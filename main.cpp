@@ -8,6 +8,7 @@
 #include "fileio.h"
 #include "facedetectfilter.h"
 #include "commonhelper.h"
+#include <QZXing.h>
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -31,6 +32,8 @@ int main(int argc, char *argv[]) {
             commonHelper);
     qmlRegisterType<DbOperate>("DbOperate", 1, 0, "DbOperate");
     qmlRegisterType<FaceDetectFilter>("opencv.lib", 1, 0, "FaceDetectFilter");
+
+    QZXing::registerQMLTypes();
 
     QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/main.qml")));
     QObject *object = component.create();

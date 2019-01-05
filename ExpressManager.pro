@@ -1,9 +1,13 @@
 QT += quick
 CONFIG += c++11
 QT += sql
-#CONFIG+=debug
+CONFIG+=release
 QT += texttospeech
 QT += multimedia
+CONFIG += qzxing_qml
+CONFIG += qzxing_multimedia
+
+include(C:/qzxing/src/QZXing.pri)
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -29,6 +33,16 @@ SOURCES += \
 RESOURCES += qml.qrc
 
 INCLUDEPATH += C:/opencv-4.0.1/build/install/include
+INCLUDEPATH += C:/Program Files/Python37/include
+
+win32 {
+    LIBS += "C:\Program Files\Python37\libs\libpython37.a"
+    LIBS += "C:\PythonQt3.2\lib\PythonQt-Qt5-Python373.dll"
+    INCLUDEPATH += "C:\Program Files\Python37\include"
+    INCLUDEPATH += "C:\PythonQt3.2\src"
+    INCLUDEPATH += "C:\Program Files\Python37\Lib\site-packages"
+}
+
 LIBS += libopencv_core401.dll \
 -lopencv_imgproc401.dll \
 libopencv_imgcodecs401.dll \
@@ -41,8 +55,7 @@ libopencv_video401.dll \
 libopencv_calib3d401.dll \
 libopencv_objdetect401.dll \
 libopencv_stitching401.dll \
-libopencv_ml401.dll
-
+libopencv_ml401.dll\
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
