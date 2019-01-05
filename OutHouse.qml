@@ -9,6 +9,10 @@ import QZXing 2.3
 Item {
     id: outHoustPage
     property bool isFaceDetected: false
+    property int detectedCount : 0
+    property string barcodeResult: ""
+    property int maxCount : 3
+    property bool canProcessBarcode: true
 
     DbOperate{
         id : dbOperate
@@ -23,7 +27,6 @@ Item {
             {
                 faceBoard.visible = false;
                 isFaceDetected = false;
-//                console.log("face not detected");
             }
             else
             {
@@ -34,7 +37,6 @@ Item {
                 faceBoard.height = r.height;
                 faceBoard.visible = true;
                 isFaceDetected = true;
-//                console.log("face detected");
             }
         }
     }
@@ -53,12 +55,34 @@ Item {
 
             enabledDecoders: QZXing.DecoderFormat_CODE_128 | QZXing.DecoderFormat_EAN_13
 
-//            onDecodingStarted: console.log("Decoding of image started...")
-
-            onTagFound: console.log("Barcode data: " + tag)
-
-//            onDecodingFinished: console.log("Decoding finished " + (succeeded==true ? "successfully" :    "unsuccessfully") )
-
+            onTagFound: {
+                if(canProcessBarcode){
+                    console.log("barcode detected :" + tag)
+                    if(detectedCount != 0) {
+                        if(barcodeResult === tag) {
+                            detectedCount++
+                        } else {
+                            detectedCount = 0
+                            barcodeResult= ""
+                        }
+                    } else {
+                        barcodeResult = tag
+                        detectedCount++
+                    }
+                    if(detectedCount === maxCount) {
+                        console.log("Read barcode success, result is " + tag)
+                        canProcessBarcode = false
+                        barcode.text = tag
+                        if(dbOperate.insertItem(barcode.text)) {
+                            captureImage("/" + barcode.text + ".jpg")
+                        } else{
+                            canProcessBarcode = true
+                        }
+                        detectedCount = 0
+                        barcodeResult= ""
+                    }
+                }
+            }
         }
     }
 
@@ -373,10 +397,11 @@ Item {
                         if(!dbOperate.updateItemPhotoUrl(barcode.text, camera.imageCapture.capturedImagePath)) {
                             captureImage("/" + barcode.text + ".jpg");
                         } else {
-                            barcode.text = ""
-                            name.text = ""
-                            phone.text = ""
-                        }
+                            canProcessBarcode = true
+                        //    barcode.text = ""
+                        //    name.text = ""
+                        //    phone.text = ""
+                       }
                     }
                 }
             }
