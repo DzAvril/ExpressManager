@@ -134,7 +134,7 @@ Item {
                 anchors.verticalCenter: barcodeSourceLable.verticalCenter
                 anchors.left: barcodeSourceLable.right
                 anchors.leftMargin: 5
-                currentIndex: 0
+                currentIndex: 1
                 model : QtMultimedia.availableCameras
 
                 textRole: "displayName"
@@ -153,6 +153,7 @@ Item {
                 text: qsTr("刷新")
                 onClicked: {
                     barcodeCameraTip.visible = false
+                    barcodeCameraId.model = QtMultimedia.availableCameras
                     barcodeCamera.start()
                 }
             }
@@ -373,6 +374,7 @@ Item {
                 text: qsTr("刷新")
                 onClicked: {
                     faceCameraTip.visible = false
+                    cameraIds.model = QtMultimedia.availableCameras
                     camera.start()
                 }
             }
@@ -428,9 +430,11 @@ Item {
 
                 Text {
                     id: faceCameraTip
+                    color: "#de1818"
                     anchors.fill: parent
                     visible: false
                     text: qsTr("打开摄像头失败，请重选源并刷新")
+                    font.pointSize: 15
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                 }
