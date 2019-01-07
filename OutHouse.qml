@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.4
-import DbOperate 1.0
 import QtMultimedia 5.9
 import QtQuick.Layouts 1.3
 import opencv.lib 1.0
@@ -13,10 +12,6 @@ Item {
     property string barcodeResult: ""
     property int maxCount : 3
     property bool canProcessBarcode: true
-
-    DbOperate{
-        id : dbOperate
-    }
 
     FaceDetectFilter
     {

@@ -3,7 +3,6 @@
 #include <QtQml>
 #include "startup.h"
 #include "queryexpinfo.h"
-#include "dboperate.h"
 #include "speech.h"
 #include "fileio.h"
 #include "facedetectfilter.h"
@@ -30,7 +29,6 @@ int main(int argc, char *argv[]) {
             fileIo);
     engine.rootContext()->setContextProperty(QStringLiteral("commonHelper"),
             commonHelper);
-    qmlRegisterType<DbOperate>("DbOperate", 1, 0, "DbOperate");
     qmlRegisterType<FaceDetectFilter>("opencv.lib", 1, 0, "FaceDetectFilter");
 
     QZXing::registerQMLTypes();

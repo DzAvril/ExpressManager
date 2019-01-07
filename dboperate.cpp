@@ -5,13 +5,11 @@
 #include <QDateTime>
 #include <stdio.h>
 #include <string>
-#include "config.h"
 #include <QGuiApplication>
 
 using namespace std;
 DbOperate::DbOperate(QObject *parent) : QObject(parent)
 {
-    speech = Speech::getInstance();
     fileIo = FileIo::getInstance();
     const QString path = QGuiApplication::applicationDirPath() + DB_PATH;
     if (!fileIo->IsPathExist(path)) {
@@ -26,6 +24,22 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent)
             qDebug("Table record is exist.");
         }
     }
+}
+
+DbOperate::DbOperate(const DbOperate &)
+{
+
+}
+
+DbOperate &DbOperate::operator=(const DbOperate &)
+{
+
+}
+
+DbOperate *DbOperate::instance = new DbOperate();
+DbOperate *DbOperate::getInstance()
+{   
+    return instance;
 }
 
 bool DbOperate::OpenDB(const QString &path)
@@ -63,8 +77,11 @@ bool DbOperate::CreateRecordTable()
                "Barcode char(30) PRIMARY KEY, "
                "Name char(20), "
                "Phone char(10),"
-               "Date char(50) NOT NULL,"
-               "PhotoUrl char(100))");
+               "InDate char(50),"
+               "OutDate char(50),"
+               "IsTaken int(1) NOT NULL,"
+               "ExpOrderPhotoUrl char(100)),"
+               "ClientPhotoUrl char(100))");
 
     if (!query.isActive()) {
         qDebug() << "Create Database Error" << db.lastError().text();
@@ -73,21 +90,12 @@ bool DbOperate::CreateRecordTable()
     return true;
 }
 
-bool DbOperate::insertItem(QString barcode, QString name, QString phone)
+bool DbOperate::InsertItem(QString &barcode, QString &name, QString &phone)
 {
     qDebug() << "Start insert item " << barcode << "to db.";
-    if (barcode.isEmpty()) {
-        speech->say(BARCODE_EMPTY);
-        return false;
-    }
     QSqlQuery query(db);
-    if (IsItemExist(barcode)) {
-        qDebug() << "Already out";
-        speech->say(ALREADY_EXIST);
-        return false;
-    }
 
-    query.prepare("INSERT INTO record (Barcode, Name, Phone, Date)"
+    query.prepare("INSERT INTO record (Barcode, Name, Phone, InDate)"
                   "VALUES (?, ?, ?, ?)");
     query.addBindValue(barcode);
     query.addBindValue(name) ;
@@ -98,13 +106,12 @@ bool DbOperate::insertItem(QString barcode, QString name, QString phone)
 
     if (!query.isActive()) {
         qDebug() << "Insert Database Error" << db.lastError().text();
-        speech->say(OUT_HOUSE_FAIL);
         return false;
     }
     return true;
 }
 
-bool DbOperate::updateItemPhotoUrl(QString barcode, QString photoUrl)
+bool DbOperate::UpdateItemPhotoUrl(QString &barcode, QString &photoUrl)
 {
     QSqlQuery query(db);
     QString strTemp;
@@ -114,11 +121,9 @@ bool DbOperate::updateItemPhotoUrl(QString barcode, QString photoUrl)
     query.exec(strTemp);
     if (!query.isActive()) {
         qDebug() << "Update photo url Error" << db.lastError().text();
-        speech->say(SAVE_PHOTO_FAIL);
         fileIo->DeleteFile(photoUrl);
         return false;
     }
-    speech->say(OUT_HOUSE_SUCCESS);
     return true;
 }
 
