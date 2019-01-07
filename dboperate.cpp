@@ -6,10 +6,10 @@
 #include <stdio.h>
 #include <string>
 #include <QGuiApplication>
+#include "config.h"
 
 using namespace std;
-DbOperate::DbOperate(QObject *parent) : QObject(parent)
-{
+DbOperate::DbOperate(QObject *parent) : QObject(parent) {
     fileIo = FileIo::getInstance();
     const QString path = QGuiApplication::applicationDirPath() + DB_PATH;
     if (!fileIo->IsPathExist(path)) {
@@ -26,25 +26,8 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent)
     }
 }
 
-DbOperate::DbOperate(const DbOperate &)
-{
-
-}
-
-DbOperate &DbOperate::operator=(const DbOperate &)
-{
-
-}
-
-DbOperate *DbOperate::instance = new DbOperate();
-DbOperate *DbOperate::getInstance()
-{   
-    return instance;
-}
-
-bool DbOperate::OpenDB(const QString &path)
-{
-    qDebug( )  << "QSqlDatabase :: Drivers ()==" << QSqlDatabase::drivers();
+bool DbOperate::OpenDB(const QString &path) {
+    qDebug()  << "QSqlDatabase :: Drivers ()==" << QSqlDatabase::drivers();
     db = QSqlDatabase::addDatabase("QSQLITE", "project");
     db.setDatabaseName(path);
     db = QSqlDatabase::database("project");
@@ -56,8 +39,7 @@ bool DbOperate::OpenDB(const QString &path)
     return true;
 }
 
-bool DbOperate::IsRecordTableExist()
-{
+bool DbOperate::IsRecordTableExist() {
     QSqlQuery query(db);
     int tempIdx = 0;
     query.exec("select count(*)  from sqlite_master where type='table' and name = 'record'")
@@ -70,8 +52,7 @@ bool DbOperate::IsRecordTableExist()
     return tempIdx ? true : false;
 }
 
-bool DbOperate::CreateRecordTable()
-{
+bool DbOperate::CreateRecordTable() {
     QSqlQuery query(db);
     query.exec("CREATE TABLE record ("
                "Barcode char(30) PRIMARY KEY, "
@@ -80,7 +61,7 @@ bool DbOperate::CreateRecordTable()
                "InDate char(50),"
                "OutDate char(50),"
                "IsTaken int(1) NOT NULL,"
-               "ExpOrderPhotoUrl char(100)),"
+               "ExpOrderPhotoUrl char(100),"
                "ClientPhotoUrl char(100))");
 
     if (!query.isActive()) {
@@ -90,18 +71,18 @@ bool DbOperate::CreateRecordTable()
     return true;
 }
 
-bool DbOperate::InsertItem(QString &barcode, QString &name, QString &phone)
-{
+bool DbOperate::InsertItem(const QString &barcode, QString &name, QString &phone) {
     qDebug() << "Start insert item " << barcode << "to db.";
     QSqlQuery query(db);
 
-    query.prepare("INSERT INTO record (Barcode, Name, Phone, InDate)"
-                  "VALUES (?, ?, ?, ?)");
+    query.prepare("INSERT INTO record (Barcode, Name, Phone, InDate, IsTaken)"
+                  "VALUES (?, ?, ?, ?, ?)");
     query.addBindValue(barcode);
     query.addBindValue(name) ;
     query.addBindValue(phone);
     QDateTime timestamp = QDateTime::currentDateTime();
     query.addBindValue(timestamp.toString("yyyy-MM-dd hh:mm:ss"));
+    query.addBindValue(0);
     query.exec();
 
     if (!query.isActive()) {
@@ -111,24 +92,66 @@ bool DbOperate::InsertItem(QString &barcode, QString &name, QString &phone)
     return true;
 }
 
-bool DbOperate::UpdateItemPhotoUrl(QString &barcode, QString &photoUrl)
-{
+bool DbOperate::UpdateClientPhotoUrl(const QString &barcode, QString &clientPhotoUrl) {
     QSqlQuery query(db);
     QString strTemp;
-    strTemp.sprintf("UPDATE record SET PhotoUrl ='%s'WHERE Barcode='%s'",
-                    photoUrl.toStdString().c_str(),
+    strTemp.sprintf("UPDATE record SET ClientPhotoUrl ='%s'WHERE Barcode='%s'",
+                    clientPhotoUrl.toStdString().c_str(),
                     barcode.toStdString().c_str());
     query.exec(strTemp);
     if (!query.isActive()) {
         qDebug() << "Update photo url Error" << db.lastError().text();
-        fileIo->DeleteFile(photoUrl);
         return false;
     }
     return true;
 }
 
-int DbOperate::GetItemsCount()
-{
+bool DbOperate::UpdateIsTaken(const QString &barcode, int isTaken) {
+    QSqlQuery query(db);
+    QString strTemp;
+    strTemp.sprintf("UPDATE record SET IsTaken ='%d'WHERE Barcode='%s'",
+                    isTaken,
+                    barcode.toStdString().c_str());
+    query.exec(strTemp);
+    if (!query.isActive()) {
+        qDebug() << "Update IsTaken Error" << db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DbOperate::UpdateOutDate(const QString &barcode) {
+    QSqlQuery query(db);
+    QString strTemp;
+    QDateTime timestamp = QDateTime::currentDateTime();
+    strTemp.sprintf("UPDATE record SET OutDate ='%s'WHERE Barcode='%s'",
+                    timestamp.toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str(),
+                    barcode.toStdString().c_str());
+    query.exec(strTemp);
+    if (!query.isActive()) {
+        qDebug() << "Update OutDate Error" << db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DbOperate::IsItemOut(const QString &barcode) {
+    QSqlQuery query(db);
+    QString strTemp;
+    strTemp.sprintf("SELECT IsTaken FROM record WHERE Barcode='%s'",
+                    barcode.toStdString().c_str());
+    query.exec(strTemp);
+    if (!query.isActive()) {
+        qDebug() << "Get is item out Error" << db.lastError().text();
+        return false;
+    }
+    if(query.first()) {
+        return query.value(0) == 1 ? true : false;
+    }
+    return false;
+}
+
+int DbOperate::GetItemsCount() {
     QSqlQuery query(db);
     int tempIdx = 0;
     query.exec("SELECT COUNT(*) FROM record");
@@ -140,8 +163,7 @@ int DbOperate::GetItemsCount()
     return tempIdx;
 }
 
-bool DbOperate::IsItemExist(QString &barcode)
-{
+bool DbOperate::IsItemExist(const QString &barcode) {
     QSqlQuery query(db);
     QString strTemp;
     int tempCount = 0;

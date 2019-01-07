@@ -22,7 +22,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    queryexpinfo.cpp \
     startup.cpp \
     dboperate.cpp \
     speech.cpp \
@@ -72,7 +71,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    queryexpinfo.h \
     startup.h \
     dboperate.h \
     config.h \

@@ -2,12 +2,12 @@
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include "startup.h"
-#include "queryexpinfo.h"
 #include "speech.h"
 #include "fileio.h"
 #include "facedetectfilter.h"
 #include "commonhelper.h"
 #include <QZXing.h>
+#include "inoutoperator.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -17,18 +17,19 @@ int main(int argc, char *argv[]) {
     startup.SystemUp();
 
     QQmlApplicationEngine engine;
-    QueryExpInfo queryExpInfo;
     Speech *speech = Speech::getInstance();
     FileIo *fileIo = FileIo::getInstance();
     CommonHelper *commonHelper = CommonHelper::getInstance();
-    engine.rootContext()->setContextProperty(QStringLiteral("queryExpInfo"),
-            &queryExpInfo);
+    InOutOperator *inOutOperator = new InOutOperator();
+
     engine.rootContext()->setContextProperty(QStringLiteral("speech"),
             speech);
     engine.rootContext()->setContextProperty(QStringLiteral("fileIo"),
             fileIo);
     engine.rootContext()->setContextProperty(QStringLiteral("commonHelper"),
             commonHelper);
+    engine.rootContext()->setContextProperty(QStringLiteral("inOutOperator"),
+            inOutOperator);
     qmlRegisterType<FaceDetectFilter>("opencv.lib", 1, 0, "FaceDetectFilter");
 
     QZXing::registerQMLTypes();

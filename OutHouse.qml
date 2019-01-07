@@ -47,9 +47,7 @@ Item {
             )));
         }
         decoder {
-
             enabledDecoders: QZXing.DecoderFormat_CODE_128 | QZXing.DecoderFormat_EAN_13
-
             onTagFound: {
                 if(canProcessBarcode){
                     console.log("barcode detected :" + tag)
@@ -65,13 +63,16 @@ Item {
                         detectedCount++
                     }
                     if(detectedCount === maxCount) {
-                        console.log("Read barcode success, result is " + tag)
                         canProcessBarcode = false
-                        barcode.text = tag
-                        if(dbOperate.insertItem(barcode.text)) {
-                            captureImage("/" + barcode.text + ".jpg")
-                        } else{
+                        console.log("Read barcode success, result is " + tag)
+                        barcode.text = tag                        
+                        if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
+                            captureImage("/" + barcode.text + ".jpg");
+                        } else {
                             canProcessBarcode = true
+                            barcode.text = ""
+                            name.text = ""
+                            phone.text = ""
                         }
                         detectedCount = 0
                         barcodeResult= ""
@@ -91,6 +92,16 @@ Item {
             commonHelper.delay(5000)
         }
         camera.imageCapture.captureToLocation(fileIo.getTempPath() + photoName);
+    }
+
+    function processOut(clientPhotoUrl) {
+        //since express-in fucntion is not implement yet, so we fake express-in process first
+        if(inOutOperator.in(barcode.text, name.text, phone.text)){
+            if(inOutOperator.out(barcode.text, clientPhotoUrl)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     Row {
@@ -233,11 +244,9 @@ Item {
                 font.pixelSize: 12
                 focus: true
                 persistentSelection : true
-                Keys.onReturnPressed: {
-                    if(dbOperate.insertItem(barcode.text)) {
-                        captureImage("/" + barcode.text + ".jpg");
-                    }
-                }
+                // Keys.onReturnPressed: {
+                    
+                // }
             }
 
             Text {
@@ -303,8 +312,16 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin:  30
                 onClicked: {
-                    if(dbOperate.insertItem(barcode.text, name.text, phone.text)) {
-                        captureImage("/" + barcode.text + ".jpg");
+                    if(barcode.text === "") {
+                        speech.say("快递单号不能为空")
+                    } else {
+                        if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
+                            captureImage("/" + barcode.text + ".jpg");
+                        } else {
+                            barcode.text = ""
+                            name.text = ""
+                            phone.text = ""
+                        }
                     }
                 }
             }
@@ -387,18 +404,15 @@ Item {
                 imageCapture {
                     onImageCaptured : {
                         photoPreview.source = preview  // Show the preview in an Image
-                        decoder.decodeImageQML(photoPreview);
                         speech.say("拍照成功")
                     }
                     onImageSaved: {
-                        if(!dbOperate.updateItemPhotoUrl(barcode.text, camera.imageCapture.capturedImagePath)) {
-                            captureImage("/" + barcode.text + ".jpg");
-                        } else {
-                            canProcessBarcode = true
-                        //    barcode.text = ""
-                        //    name.text = ""
-                        //    phone.text = ""
-                       }
+                        if(processOut(camera.imageCapture.capturedImagePath)) {
+                            barcode.text = ""
+                            name.text = ""
+                            phone.text = ""
+                        }
+                        canProcessBarcode = true
                     }
                 }
             }

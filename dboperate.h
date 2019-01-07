@@ -7,16 +7,15 @@
 class DbOperate : public QObject {
     Q_OBJECT
   public:
-    bool OpenDB(const QString &path);
-    Q_INVOKABLE bool InsertItem(QString &barcode, QString &name ,QString &phone);
-    Q_INVOKABLE bool UpdateItemPhotoUrl(QString &barcode, QString &photoUrl);
-    static DbOperate *getInstance();
-    bool IsItemExist(QString &barcode);
-  private:
     explicit DbOperate(QObject *parent = nullptr);
-    DbOperate(const DbOperate&);
-    DbOperate &operator=(const DbOperate &);
-    static DbOperate *instance;
+    bool OpenDB(const QString &path);
+    bool InsertItem(const QString &barcode, QString &name ,QString &phone);
+    bool UpdateClientPhotoUrl(const QString &barcode, QString &photoUrl);
+    bool UpdateIsTaken(const QString &barcode, int isTaken);
+    bool UpdateOutDate(const QString &barcode);
+    bool IsItemExist(const QString &barcode);
+    bool IsItemOut(const QString &barcode);
+  private:
     QSqlDatabase db;
     bool IsRecordTableExist();
     bool CreateRecordTable();

@@ -3,24 +3,24 @@
 #include <QTextToSpeech>
 
 #include <QObject>
+#include "commonhelper.h"
 
-class Speech : public QObject
-{
+class Speech : public QObject {
     Q_OBJECT
-public:
+  public:
     static Speech *getInstance();
     Q_INVOKABLE void say(const QString &);
-private:
+  private:
     explicit Speech(QObject *parent = nullptr);
     Speech(const Speech &);
     Speech &operator=(const Speech &);
     QTextToSpeech *m_speech;
     static Speech *instance;
+    CommonHelper *commonHelper;
 
+  signals:
 
-signals:
-
-public slots:
+  public slots:
 };
 
 #endif // SPEECH_H

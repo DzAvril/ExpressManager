@@ -4,22 +4,23 @@
 #include <QObject>
 #include "dboperate.h"
 #include "speech.h"
+#include "fileio.h"
 
-class InOutOperator : public QObject
-{
+class InOutOperator : public QObject {
     Q_OBJECT
-public:
+  public:
     explicit InOutOperator(QObject *parent = nullptr);
     Q_INVOKABLE bool in(QString barcode, QString name = nullptr,
-            QString phone = nullptr);
+                        QString phone = nullptr);
     Q_INVOKABLE bool out(QString barcode, QString photoUrl);
-private:
+    Q_INVOKABLE bool isItemAlreadyOut(QString barcode);
+  private:
     DbOperate *db;
-    Speech* speech;
+    Speech *speech;
+    FileIo *fileIo;
+  signals:
 
-signals:
-
-public slots:
+  public slots:
 };
 
 #endif // INOUTOPERATOR_H
