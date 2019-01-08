@@ -33,15 +33,6 @@ SOURCES += \
 RESOURCES += qml.qrc
 
 INCLUDEPATH += C:/opencv-4.0.1/build/install/include
-INCLUDEPATH += C:/Program Files/Python37/include
-
-win32 {
-    LIBS += "C:\Program Files\Python37\libs\libpython37.a"
-    LIBS += "C:\PythonQt3.2\lib\PythonQt-Qt5-Python373.dll"
-    INCLUDEPATH += "C:\Program Files\Python37\include"
-    INCLUDEPATH += "C:\PythonQt3.2\src"
-    INCLUDEPATH += "C:\Program Files\Python37\Lib\site-packages"
-}
 
 LIBS += libopencv_core401.dll \
 -lopencv_imgproc401.dll \

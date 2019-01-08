@@ -5,6 +5,7 @@
 #include "dboperate.h"
 #include "speech.h"
 #include "fileio.h"
+#include "commonhelper.h"
 
 class InOutOperator : public QObject {
     Q_OBJECT
@@ -18,6 +19,7 @@ class InOutOperator : public QObject {
     DbOperate *db;
     Speech *speech;
     FileIo *fileIo;
+    CommonHelper *commonHelper;
   signals:
 
   public slots:

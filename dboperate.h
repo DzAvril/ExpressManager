@@ -12,7 +12,7 @@ class DbOperate : public QObject {
     bool InsertItem(const QString &barcode, QString &name ,QString &phone);
     bool UpdateClientPhotoUrl(const QString &barcode, QString &photoUrl);
     bool UpdateIsTaken(const QString &barcode, int isTaken);
-    bool UpdateOutDate(const QString &barcode);
+    bool UpdateOutDate(const QString &barcode, const QString &outDate);
     bool IsItemExist(const QString &barcode);
     bool IsItemOut(const QString &barcode);
   private:

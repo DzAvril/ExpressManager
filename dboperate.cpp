@@ -2,11 +2,11 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QDebug>
-#include <QDateTime>
 #include <stdio.h>
 #include <string>
 #include <QGuiApplication>
 #include "config.h"
+#include "QDateTime"
 
 using namespace std;
 DbOperate::DbOperate(QObject *parent) : QObject(parent) {
@@ -120,12 +120,11 @@ bool DbOperate::UpdateIsTaken(const QString &barcode, int isTaken) {
     return true;
 }
 
-bool DbOperate::UpdateOutDate(const QString &barcode) {
+bool DbOperate::UpdateOutDate(const QString &barcode, const QString &outDate) {
     QSqlQuery query(db);
     QString strTemp;
-    QDateTime timestamp = QDateTime::currentDateTime();
     strTemp.sprintf("UPDATE record SET OutDate ='%s'WHERE Barcode='%s'",
-                    timestamp.toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str(),
+                    outDate.toStdString().c_str(),
                     barcode.toStdString().c_str());
     query.exec(strTemp);
     if (!query.isActive()) {

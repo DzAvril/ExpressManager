@@ -14,12 +14,6 @@ ApplicationWindow {
         font.bold: true
         font.pointSize: 15
         contentHeight : 30
-//        TabButton{
-//            text: "入库"
-//        }
-//        background: Rectangle {
-//            color: "yellow"
-//        }
         TabButton {
             text: "出库"
             background: Rectangle {
@@ -32,6 +26,12 @@ ApplicationWindow {
                 color: bar.currentIndex === 1 ? "orange" : "lightblue"
             }
         }
+        TabButton{
+            text: "查询"
+            background: Rectangle {
+                color: bar.currentIndex === 2 ? "orange" : "lightblue"
+            }
+        }
     }
 
     StackLayout {
@@ -39,10 +39,6 @@ ApplicationWindow {
         height: parent.height
         currentIndex: bar.currentIndex
 
-//        Item {
-//            id: tabIn
-//            InHouse {}
-//        }
         Item {
             id: tabOut
             height: parent.height
@@ -58,10 +54,10 @@ ApplicationWindow {
             width: parent.height
             Statistics {}
         }
-//        Item {
-//            id: tabQuery
-//            QueryExpress {}
-//        }
+        Item {
+            id: tabQuery
+            QueryExpress {}
+        }
     }
 
 

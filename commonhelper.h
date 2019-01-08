@@ -9,6 +9,7 @@ class CommonHelper : public QObject
 public:
     static CommonHelper *getInstance();
     Q_INVOKABLE void delay(int n);
+    void PutTextToImage(QString &photoUrl, QString &barcode, QString &time);
 private:
     explicit CommonHelper(QObject *parent = nullptr);
     CommonHelper(const CommonHelper&);
