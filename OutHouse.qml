@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.4
+import QtQuick.Controls 1.4 as QC
 import QtMultimedia 5.9
 import QtQuick.Layouts 1.3
 import opencv.lib 1.0
@@ -104,9 +105,10 @@ Item {
         return false;
     }
 
-    Item {
+    QC.SplitView {
+        id: splitView
         anchors.fill: parent
-
+        orientation: Qt.Horizontal
         Item {
             id: expInfoView
             height: parent.height
@@ -326,13 +328,6 @@ Item {
                 }
             }
 
-        }
-        Rectangle{
-            id :seperator
-            height: parent.height
-            x : parent.width / 2
-            width: 1
-            color: "grey"
         }
 
         Item{
