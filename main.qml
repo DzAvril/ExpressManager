@@ -56,7 +56,12 @@ ApplicationWindow {
         }
         Item {
             id: tabQuery
-            QueryExpress {}
+            width: parent.width
+            height: parent.height
+            QueryExpress {
+                queryExpressHeight:tabQuery.height
+                queryExpressWidth: tabQuery.width
+            }
         }
     }
 

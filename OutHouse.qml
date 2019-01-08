@@ -13,6 +13,9 @@ Item {
     property int maxCount : 3
     property bool canProcessBarcode: true
 
+    property alias outHoustPageHeight: outHoustPage.height
+    property alias outHoustPageWidth: outHoustPage.width
+
     FaceDetectFilter
     {
         id: faceDetectFilter
@@ -81,9 +84,6 @@ Item {
             }
         }
     }
-
-    property alias outHoustPageHeight: outHoustPage.height
-    property alias outHoustPageWidth: outHoustPage.width
 
     function captureImage(photoName) {
         speech.say("开始拍照")
