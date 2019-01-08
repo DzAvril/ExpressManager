@@ -8,6 +8,8 @@
 #include "commonhelper.h"
 #include <QZXing.h>
 #include "inoutoperator.h"
+#include "outexpmodel.h"
+#include "sqldatabasehandler.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -21,7 +23,50 @@ int main(int argc, char *argv[]) {
     FileIo *fileIo = FileIo::getInstance();
     CommonHelper *commonHelper = CommonHelper::getInstance();
     InOutOperator *inOutOperator = new InOutOperator();
+    OutExpModel *outExpModel = new OutExpModel();
 
+    bool dbStarted;
+    QString errorString;
+    SqlDatabaseHandler db("mydata.db");
+    db.start(&dbStarted, &errorString, [&](SqlDatabaseHandler * db) {
+        SqlTable personTable;
+
+        SqlField idField;
+        SqlField nameField;
+        SqlField ageField;
+        idField.setName("id");
+        idField.setType(SqlField::FieldType::INT);
+        idField.SetConstraints(SqlField::FieldConstranints::PRIMARY_KEY
+                               | SqlField::FieldConstranints::AUTO_INCREMENT
+                               | SqlField::FieldConstranints::NOT_NULL);
+        nameField.setName("name");
+        nameField.setType(SqlField::FieldType::STRING);
+        nameField.SetConstraints(SqlField::FieldConstranints::NOT_NULL);
+
+        ageField.setName("age");
+        ageField.setType(SqlField::FieldType::INT);
+        ageField.SetConstraints(SqlField::FieldConstranints::NOT_NULL);
+
+        personTable.setName("person");
+        personTable.addField(nameField);
+        personTable.addField(ageField);
+
+        db->addTable(personTable);
+
+    });
+    if (dbStarted) {
+        qDebug() << "Database is started.";
+    } else {
+        qDebug() << "error : " << errorString;
+        return -1;
+    }
+    OutExpModel personModel;
+    personModel.setTable("person");
+    personModel.select();
+    engine.rootContext()->setContextProperty("personModel", &personModel);
+
+    engine.rootContext()->setContextProperty(QStringLiteral("outExpModel"),
+            outExpModel);
     engine.rootContext()->setContextProperty(QStringLiteral("speech"),
             speech);
     engine.rootContext()->setContextProperty(QStringLiteral("fileIo"),

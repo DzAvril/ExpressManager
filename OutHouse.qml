@@ -259,6 +259,7 @@ Item {
                 anchors.left: barcodeLable.left
                 font.family: "Arial"
                 font.pointSize: 13
+                visible: false
             }
 
             TextInput {
@@ -274,7 +275,8 @@ Item {
                 autoScroll: false
                 font.pixelSize: 12
                 focus: true
-                renderType: TextInput.NativeRendering;
+                renderType: TextInput.NativeRendering
+                visible: false
             }
             Text {
                 id: phoneLable
@@ -284,6 +286,7 @@ Item {
                 anchors.left: nameLable.left
                 font.family: "Arial"
                 font.pointSize: 13
+                visible: false
             }
 
             TextInput {
@@ -301,6 +304,7 @@ Item {
                 autoScroll: false
                 font.pixelSize: 15
                 focus: true
+                visible: false
             }
 
             Button {
