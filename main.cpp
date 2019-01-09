@@ -9,7 +9,7 @@
 #include <QZXing.h>
 #include "inoutoperator.h"
 #include "outexpmodel.h"
-#include "sqldatabasehandler.h"
+#include "persondatabahandler.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     bool dbStarted;
     QString errorString;
-    SqlDatabaseHandler db("mydata.db");
+    PersonDatabaHandler db("mydata.db");
     db.start(&dbStarted, &errorString, [&](SqlDatabaseHandler * db) {
         SqlTable personTable;
 
@@ -45,11 +45,11 @@ int main(int argc, char *argv[]) {
 
         ageField.setName("age");
         ageField.setType(SqlField::FieldType::INT);
-        ageField.SetConstraints(SqlField::FieldConstranints::NOT_NULL);
+        ageField.SetConstraints(SqlField::FieldConstranints::NONE);
 
         personTable.setName("person");
-        personTable.addField(nameField);
         personTable.addField(ageField);
+        personTable.addField(nameField);
 
         db->addTable(personTable);
 
@@ -61,9 +61,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
     OutExpModel personModel;
-    personModel.setTable("person");
-    personModel.select();
-    engine.rootContext()->setContextProperty("personModel", &personModel);
+    engine.rootContext()->setContextProperty("personModel", db.personTableModel());
 
     engine.rootContext()->setContextProperty(QStringLiteral("outExpModel"),
             outExpModel);

@@ -33,7 +33,8 @@ SOURCES += \
     sqlfield.cpp \
     sqlrecord.cpp \
     sqltable.cpp \
-    sqldatabasehandler.cpp
+    sqldatabasehandler.cpp \
+    persondatabahandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -79,7 +80,8 @@ HEADERS += \
     sqlfield.h \
     sqlrecord.h \
     sqltable.h \
-    sqldatabasehandler.h
+    sqldatabasehandler.h \
+    persondatabahandler.h
 
 #qml_scenes.depends = $$PWD/resources/scene1.qml $$PWD/resources/scene2.qml ...
 #qml_scenes.commands =

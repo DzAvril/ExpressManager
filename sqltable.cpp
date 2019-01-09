@@ -55,7 +55,7 @@ bool SqlTable::addField(const SqlField &field, QString *errorString) {
 
 bool SqlTable::createIfNotExists(QString *errorString) const {
     QSqlQuery query;
-    if (query.prepare((QString("create table if not exists : table")))) {
+    if (query.prepare((QString("create table if not exists %1").arg(sql())))) {
         query.bindValue(":table", m_name);
         if (query.exec()) {
             return true;
@@ -77,7 +77,7 @@ bool SqlTable::insert(const QList<SqlRecord> &records, QString *errorString) con
             queryString += QString(", %1").arg(records.at(ix).field());
         }
         queryString += ") values (";
-        queryString += QString(": %1").arg(records.at(0).field());
+        queryString += QString(":%1").arg(records.at(0).field());
         for (int ix = 1; ix < nRecords; ++ix) {
             queryString += QString(", %1").arg(records.at(ix).field());
         }

@@ -7,32 +7,59 @@ Page {
     id : queryExpress
     property alias queryExpressHeight: queryExpress.height
     property alias queryExpressWidth: queryExpress.width
-    Button {
-        onClicked: {
-            outExpModel.add()
-        }
-    }
+
+//    QC.TableView {
+//        id: tableView
+//        anchors.fill: parent
+//        model: outExpModel
+
+//        QC.TableViewColumn {
+//            role: "barcode"
+//            title: "单号"
+//            width: parent.width / 3
+//        }
+//        QC.TableViewColumn {
+//            role: "outDate"
+//            title: "出库时间"
+//            width: parent.width / 3
+//        }
+//        QC.TableViewColumn {
+//            role: "clientPhotoUrl"
+//            title: "客户存照"
+//            width: parent.width / 3
+//        }
+//    }
 
     QC.TableView {
-        id: tableView
+        model: personModel
         anchors.fill: parent
-        model: outExpModel
+        onClicked: {
+            console.log("row: " + row);
+        }
 
-        QC.TableViewColumn {
-            role: "barcode"
-            title: "单号"
-            width: parent.width / 3
+        QC.TableViewColumn{
+            role: "name"
+            title: "Name"
+            width: 200
         }
-        QC.TableViewColumn {
-            role: "outDate"
-            title: "出库时间"
-            width: parent.width / 3
+
+        QC.TableViewColumn{
+            role: "age"
+            title: "Age"
+            width: 200
         }
-        QC.TableViewColumn {
-            role: "clientPhotoUrl"
-            title: "客户存照"
-            width: parent.width / 3
+
+        rowDelegate: Rectangle {
+            height: 30
+            SystemPalette {
+                id: myPalette
+                colorGroup: SystemPalette.Active
+            }
+//            color: {
+//                var baseColor = style
+//            }
         }
+
     }
 }
 

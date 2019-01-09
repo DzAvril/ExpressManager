@@ -11,6 +11,7 @@ class SqlRecord {
     void setValue(const QVariant &value);
     QString field() const;
     QVariant value() const;
+    static SqlRecord makeRecord(const QString &field, const QVariant &value);
   private:
     QString m_field;
     QVariant m_value;

@@ -26,6 +26,9 @@ QString SqlField::sql() const {
             sqlString += " blob";
             break;
         }
+        case FieldType::NONE: {
+            return "";
+        }
     }
     if (m_constraints & FieldConstranints::PRIMARY_KEY) {
         sqlString += " primary key";

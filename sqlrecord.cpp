@@ -20,3 +20,10 @@ QString SqlRecord::field() const {
 QVariant SqlRecord::value() const {
     return m_value;
 }
+
+SqlRecord SqlRecord::makeRecord(const QString &field, const QVariant &value) {
+    SqlRecord record;
+    record.setField(field);
+    record.setValue(value);
+    return record;
+}
