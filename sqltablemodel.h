@@ -8,10 +8,10 @@
 #include <QByteArray>
 #include <QSqlTableModel>
 
-class OutExpModel : public QSqlTableModel {
+class SqlTableModel : public QSqlTableModel {
     Q_OBJECT
   public:
-    OutExpModel(QObject *parent = nullptr);
+    SqlTableModel(QObject *parent = nullptr);
   protected:
     Q_INVOKABLE QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;

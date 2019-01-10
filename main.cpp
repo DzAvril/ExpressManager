@@ -8,7 +8,6 @@
 #include "commonhelper.h"
 #include <QZXing.h>
 #include "inoutoperator.h"
-// #include "outexpmodel.h"
 #include "persondatabahandler.h"
 
 int main(int argc, char *argv[]) {
@@ -23,7 +22,6 @@ int main(int argc, char *argv[]) {
     FileIo *fileIo = FileIo::getInstance();
     CommonHelper *commonHelper = CommonHelper::getInstance();
     InOutOperator *inOutOperator = new InOutOperator();
-//     OutExpModel *outExpModel = new OutExpModel();
 
     bool dbStarted;
     QString errorString;
@@ -49,8 +47,8 @@ int main(int argc, char *argv[]) {
 
         personTable.setName("person");
         personTable.addField(idField);
-        personTable.addField(ageField);
         personTable.addField(nameField);
+        personTable.addField(ageField);
 
         db->addTable(personTable);
 
@@ -61,11 +59,8 @@ int main(int argc, char *argv[]) {
         qDebug() << "error : " << errorString;
         return -1;
     }
-//     OutExpModel personModel;
     engine.rootContext()->setContextProperty("personModel", db.personTableModel());
 
-//     engine.rootContext()->setContextProperty(QStringLiteral("outExpModel"),
-//             outExpModel);
     engine.rootContext()->setContextProperty(QStringLiteral("speech"),
             speech);
     engine.rootContext()->setContextProperty(QStringLiteral("fileIo"),

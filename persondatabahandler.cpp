@@ -32,7 +32,7 @@ PersonDatabaHandler::PersonDatabaHandler(const QString &dbname, QObject *parent)
     m_personRows.append(row4);
     m_personRows.append(row5);
 
-    m_personTableModel = new OutExpModel(this);
+    m_personTableModel = new SqlTableModel(this);
     connect(this, &PersonDatabaHandler::started, this, [&]() {
         //insert values into person table
         const int nPersonRows = m_personRows.size();
@@ -50,7 +50,7 @@ PersonDatabaHandler::PersonDatabaHandler(const QString &dbname, QObject *parent)
     });
 }
 
-OutExpModel *PersonDatabaHandler::personTableModel() const {
+SqlTableModel *PersonDatabaHandler::personTableModel() const {
     return m_personTableModel;
 }
 

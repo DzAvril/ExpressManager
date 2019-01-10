@@ -1,12 +1,12 @@
-#include "outexpmodel.h"
+#include "sqltablemodel.h"
 
 
-OutExpModel::OutExpModel(QObject *parent)
+SqlTableModel::SqlTableModel(QObject *parent)
     : QSqlTableModel(parent) {
 
 }
 
-QVariant OutExpModel::data(const QModelIndex &idx, int role) const {
+QVariant SqlTableModel::data(const QModelIndex &idx, int role) const {
     if (idx.row() >= rowCount()) {
         return QString();
     }
@@ -17,7 +17,7 @@ QVariant OutExpModel::data(const QModelIndex &idx, int role) const {
     return QSqlTableModel::data(modelIndex, Qt::EditRole);
 }
 
-QHash<int, QByteArray> OutExpModel::roleNames() const {
+QHash<int, QByteArray> SqlTableModel::roleNames() const {
     QHash<int, QByteArray> roles;
     const int ncols = columnCount();
     for (int ix = 0; ix < ncols; ++ix) {

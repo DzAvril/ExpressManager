@@ -11,7 +11,7 @@ QString SqlField::sql() const {
     sqlString += m_name;
     switch (m_type) {
         case FieldType::INT: {
-            sqlString += " interger";
+            sqlString += " integer";
             break;
         }
         case FieldType::FLOAT: {
