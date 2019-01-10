@@ -1,5 +1,5 @@
 #include "sqltablemodel.h"
-
+#include <QtDebug>
 
 SqlTableModel::SqlTableModel(QObject *parent)
     : QSqlTableModel(parent) {
@@ -24,6 +24,7 @@ QHash<int, QByteArray> SqlTableModel::roleNames() const {
         roles.insert(Qt::UserRole + ix + 1,
                      QVariant(headerData(ix, Qt::Horizontal).toString())
                      .toByteArray());
+        qDebug() << "roles: " << QVariant(headerData(ix, Qt::Horizontal).toString());
     }
     return roles;
 }

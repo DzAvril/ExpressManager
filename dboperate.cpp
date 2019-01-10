@@ -24,6 +24,10 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
             qDebug("Table record is exist.");
         }
     }
+    m_expTableModel = new SqlTableModel(this);
+
+    m_expTableModel->setTable("person");
+    m_expTableModel->select();
 }
 
 bool DbOperate::OpenDB(const QString &path) {
@@ -89,6 +93,8 @@ bool DbOperate::InsertItem(const QString &barcode, QString &name, QString &phone
         qDebug() << "Insert Database Error" << db.lastError().text();
         return false;
     }
+    m_expTableModel->setTable("record");
+    m_expTableModel->select();
     return true;
 }
 
@@ -144,10 +150,14 @@ bool DbOperate::IsItemOut(const QString &barcode) {
         qDebug() << "Get is item out Error" << db.lastError().text();
         return false;
     }
-    if(query.first()) {
+    if (query.first()) {
         return query.value(0) == 1 ? true : false;
     }
     return false;
+}
+
+SqlTableModel *DbOperate::expTableModel() const {
+    return m_expTableModel;
 }
 
 int DbOperate::GetItemsCount() {

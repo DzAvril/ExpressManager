@@ -45,9 +45,13 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
 }
 
 bool InOutOperator::isItemAlreadyOut(QString barcode) {
-    if(db->IsItemOut(barcode)) {
+    if (db->IsItemOut(barcode)) {
         speech->say(ALREADY_EXIST);
         return true;
     }
     return false;
+}
+
+DbOperate *InOutOperator::expDb() const {
+    return db;
 }

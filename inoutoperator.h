@@ -15,6 +15,7 @@ class InOutOperator : public QObject {
                         QString phone = nullptr);
     Q_INVOKABLE bool out(QString barcode, QString photoUrl);
     Q_INVOKABLE bool isItemAlreadyOut(QString barcode);
+    DbOperate *expDb() const;
   private:
     DbOperate *db;
     Speech *speech;

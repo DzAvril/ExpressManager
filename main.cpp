@@ -69,6 +69,8 @@ int main(int argc, char *argv[]) {
             commonHelper);
     engine.rootContext()->setContextProperty(QStringLiteral("inOutOperator"),
             inOutOperator);
+    engine.rootContext()->setContextProperty("expModel", inOutOperator->expDb()->expTableModel());
+
     qmlRegisterType<FaceDetectFilter>("opencv.lib", 1, 0, "FaceDetectFilter");
 
     QZXing::registerQMLTypes();

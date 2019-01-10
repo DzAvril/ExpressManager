@@ -55,9 +55,56 @@ Page {
                 id: myPalette
                 colorGroup: SystemPalette.Active
             }
-//            color: {
-//                var baseColor = style
-//            }
+            color: {
+                var baseColor = styleData.alternate ?
+                            myPalette.alternateBase
+                          : myPalette.base;
+                return styleData.selected ?
+                            myPalette.highlight
+                          : baseColor;
+            }
+        }
+
+    }
+    QC.TableView {
+        model: expModel
+        anchors.fill: parent
+        onClicked: {
+            console.log("row: " + row);
+        }
+
+        QC.TableViewColumn{
+            role: "Barcode"
+            title: "单号"
+            width: 200
+        }
+
+        QC.TableViewColumn{
+            role: "OutDate"
+            title: "出库时间"
+            width: 200
+        }
+
+        QC.TableViewColumn{
+            role: "ClientPhotoUrl"
+            title: "存照"
+            width: 200
+        }
+
+        rowDelegate: Rectangle {
+            height: 30
+            SystemPalette {
+                id: myPalette1
+                colorGroup: SystemPalette.Active
+            }
+            color: {
+                var baseColor = styleData.alternate ?
+                            myPalette1.alternateBase
+                          : myPalette1.base;
+                return styleData.selected ?
+                            myPalette1.highlight
+                          : baseColor;
+            }
         }
 
     }
