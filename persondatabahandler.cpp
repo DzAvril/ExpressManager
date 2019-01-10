@@ -11,20 +11,20 @@ PersonDatabaHandler::PersonDatabaHandler(const QString &dbname, QObject *parent)
     QList<SqlRecord> row4;
     QList<SqlRecord> row5;
 
-    row1.append(SqlRecord::makeRecord("age", 23));
     row1.append(SqlRecord::makeRecord("name", "Ana"));
+    row1.append(SqlRecord::makeRecord("age", 23));
 
     row2.append(SqlRecord::makeRecord("name", "Pedro"));
-    //        row2.append(SqlRecord::makeRecord("age", 22));
+            row2.append(SqlRecord::makeRecord("age", 22));
 
     row3.append(SqlRecord::makeRecord("name", "Juan"));
-    //        row3.append(SqlRecord::makeRecord("age", 25));
+            row3.append(SqlRecord::makeRecord("age", 25));
 
     row4.append(SqlRecord::makeRecord("name", "Luis"));
-    //        row4.append(SqlRecord::makeRecord("age", 18));
+            row4.append(SqlRecord::makeRecord("age", 18));
 
     row5.append(SqlRecord::makeRecord("name", "Lisa"));
-    //        row5.append(SqlRecord::makeRecord("age", 11));
+            row5.append(SqlRecord::makeRecord("age", 11));
 
     m_personRows.append(row1);
     m_personRows.append(row2);
@@ -38,11 +38,13 @@ PersonDatabaHandler::PersonDatabaHandler(const QString &dbname, QObject *parent)
         const int nPersonRows = m_personRows.size();
         for (int ix = 0; ix < nPersonRows; ++ix) {
             if (!rowExists(m_personRows.at(ix))) {
-                QString err;
-                qDebug() << insert("person", m_personRows.at(ix), &err);
-                qDebug() << err;
+                insert("person", m_personRows.at(ix), nullptr);
+            } else {
+                emit transactionDone();
             }
         }
+    });
+    connect(this, &PersonDatabaHandler::transactionDone, this, [&]{
         m_personTableModel->setTable("person");
         m_personTableModel->select();
     });
