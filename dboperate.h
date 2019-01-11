@@ -17,6 +17,9 @@ class DbOperate : public QObject {
     bool IsItemExist(const QString &barcode);
     bool IsItemOut(const QString &barcode);
     SqlTableModel *expTableModel() const;
+    void RefreshModel();
+    void SetFilter(QString &filterStr);
+
   private:
     QSqlDatabase db;
     bool IsRecordTableExist();

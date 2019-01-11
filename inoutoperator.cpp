@@ -9,6 +9,12 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     speech = Speech::getInstance();
     fileIo = FileIo::getInstance();
     commonHelper = CommonHelper::getInstance();
+    model = db->expTableModel();
+    filterString.clear();
+    filterBarcode.clear();
+    filterOutDate.clear();
+    filterStartOutDate.clear();
+    filterEndOutDate.clear();
 }
 
 bool InOutOperator::in(QString barcode, QString name, QString phone) {
@@ -52,6 +58,93 @@ bool InOutOperator::isItemAlreadyOut(QString barcode) {
     return false;
 }
 
+void InOutOperator::setBarcodeFilter(QString barcode)
+{
+    if(barcode == "") {
+        filterBarcode.clear();
+    } else {
+        filterBarcode = barcode;
+    }
+    PackFilterFrame();
+    db->SetFilter(filterString);
+}
+
+void InOutOperator::setOutDateFilter(QString outdate)
+{
+    if(outdate == "") {
+        filterOutDate.clear();
+    } else {
+        filterOutDate = outdate;
+    }
+    PackFilterFrame();
+    db->SetFilter(filterString);
+}
+
+void InOutOperator::setStartOutDateFilter(QString startOutDate)
+{
+    if(startOutDate == "") {
+        filterStartOutDate.clear();
+    } else {
+        filterStartOutDate = startOutDate;
+    }
+    PackFilterFrame();
+    db->SetFilter(filterString);
+}
+
+void InOutOperator::setEndOutDateFilter(QString endOutDate)
+{
+    if(endOutDate == "") {
+        filterEndOutDate.clear();
+    } else {
+        filterEndOutDate = endOutDate;
+    }
+    PackFilterFrame();
+    db->SetFilter(filterString);
+}
+
+void InOutOperator::resetFilter()
+{
+    filterString.clear();
+    filterBarcode.clear();
+    filterOutDate.clear();
+    filterStartOutDate.clear();
+    filterEndOutDate.clear();
+    db->SetFilter(filterString);
+}
+
 DbOperate *InOutOperator::expDb() const {
     return db;
+}
+
+void InOutOperator::PackFilterFrame()
+{
+    filterString.clear();
+    if(!filterBarcode.isEmpty()) {
+        filterString += QString("Barcode like '%1%'").arg(filterBarcode);
+        if(!filterOutDate.isEmpty()) {
+            filterString += " and ";
+            filterString += QString("todo");
+            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
+                filterString += " and ";
+                filterString += QString("todo");
+            }
+        } else {
+            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
+                filterString += QString("todo");
+            }
+        }
+    } else {
+        if(!filterOutDate.isEmpty()) {
+            filterString += QString("todo");
+            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
+                filterString += " and ";
+                filterString += QString("todo");
+            }
+        } else {
+            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
+                filterString += QString("todo");
+            }
+        }
+    }
+    qDebug() << "Filter string is " << filterString;
 }

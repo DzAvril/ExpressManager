@@ -15,12 +15,20 @@ class InOutOperator : public QObject {
                         QString phone = nullptr);
     Q_INVOKABLE bool out(QString barcode, QString photoUrl);
     Q_INVOKABLE bool isItemAlreadyOut(QString barcode);
+    Q_INVOKABLE void setBarcodeFilter(QString barcode);
+    Q_INVOKABLE void setOutDateFilter(QString outdate);
+    Q_INVOKABLE void setStartOutDateFilter(QString startOutDate);
+    Q_INVOKABLE void setEndOutDateFilter(QString endOutDate);
+    Q_INVOKABLE void resetFilter();
     DbOperate *expDb() const;
   private:
     DbOperate *db;
+    SqlTableModel *model;
     Speech *speech;
     FileIo *fileIo;
     CommonHelper *commonHelper;
+    QString filterString, filterBarcode, filterOutDate, filterStartOutDate, filterEndOutDate;
+    void PackFilterFrame();
   signals:
 
   public slots:

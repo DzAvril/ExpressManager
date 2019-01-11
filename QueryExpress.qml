@@ -8,87 +8,62 @@ Page {
     property alias queryExpressHeight: queryExpress.height
     property alias queryExpressWidth: queryExpress.width
 
-//    QC.TableView {
-//        id: tableView
-//        anchors.fill: parent
-//        model: outExpModel
+    TextField {
+        id: barcodeFilter
+        anchors.top: parent.top
+        anchors.topMargin: 30
+        anchors.left: parent.left
+        anchors.leftMargin: 30
+        width: 100
+        height: 40
+        background: Rectangle {
+            border.color: "black"
+            border.width: 1
+        }
 
-//        QC.TableViewColumn {
-//            role: "barcode"
-//            title: "单号"
-//            width: parent.width / 3
-//        }
-//        QC.TableViewColumn {
-//            role: "outDate"
-//            title: "出库时间"
-//            width: parent.width / 3
-//        }
-//        QC.TableViewColumn {
-//            role: "clientPhotoUrl"
-//            title: "客户存照"
-//            width: parent.width / 3
-//        }
-//    }
+        onTextChanged: {
+            inOutOperator.setBarcodeFilter(barcodeFilter.text);
+        }
+    }
 
-//    QC.TableView {
-//        model: personModel
-//        anchors.fill: parent
-//        onClicked: {
-//            console.log("row: " + row);
-//        }
+    Button {
+        id: resetBtn
+        anchors.top: barcodeFilter.top
+        anchors.left: barcodeFilter.right
+        anchors.leftMargin: 10
+        height: barcodeFilter.height
+        width: 60
+        text: "重置"
+        onClicked: {
+            inOutOperator.resetFilter();
+            barcodeFilter.text = "";
+        }
+    }
 
-//        QC.TableViewColumn{
-//            role: "name"
-//            title: "Name"
-//            width: 200
-//        }
-
-//        QC.TableViewColumn{
-//            role: "age"
-//            title: "Age"
-//            width: 200
-//        }
-
-//        rowDelegate: Rectangle {
-//            height: 30
-//            SystemPalette {
-//                id: myPalette
-//                colorGroup: SystemPalette.Active
-//            }
-//            color: {
-//                var baseColor = styleData.alternate ?
-//                            myPalette.alternateBase
-//                          : myPalette.base;
-//                return styleData.selected ?
-//                            myPalette.highlight
-//                          : baseColor;
-//            }
-//        }
-
-//    }
     QC.TableView {
         model: expModel
-        anchors.fill: parent
-        onClicked: {
-            console.log("row: " + row);
-        }
+        width: parent.width
+        anchors.top: barcodeFilter.bottom
+        anchors.topMargin: 30
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 100
 
         QC.TableViewColumn{
             role: "Barcode"
             title: "单号"
-            width: 200
+            width: parent.width / 3
         }
 
         QC.TableViewColumn{
             role: "OutDate"
             title: "出库时间"
-            width: 200
+            width: parent.width / 3
         }
 
         QC.TableViewColumn{
             role: "ClientPhotoUrl"
             title: "存照"
-            width: 200
+            width: parent.width / 3
         }
 
         rowDelegate: Rectangle {

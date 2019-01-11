@@ -8,7 +8,6 @@
 #include "commonhelper.h"
 #include <QZXing.h>
 #include "inoutoperator.h"
-#include "persondatabahandler.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

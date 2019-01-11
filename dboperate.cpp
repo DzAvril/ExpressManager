@@ -25,9 +25,8 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
         }
     }
     m_expTableModel = new SqlTableModel(this, db);
-
     m_expTableModel->setTable("record");
-    m_expTableModel->select();
+    RefreshModel();
 }
 
 bool DbOperate::OpenDB(const QString &path) {
@@ -93,8 +92,7 @@ bool DbOperate::InsertItem(const QString &barcode, QString &name, QString &phone
         qDebug() << "Insert Database Error" << db.lastError().text();
         return false;
     }
-    m_expTableModel->setTable("record");
-    m_expTableModel->select();
+    RefreshModel();
     return true;
 }
 
@@ -109,6 +107,7 @@ bool DbOperate::UpdateClientPhotoUrl(const QString &barcode, QString &clientPhot
         qDebug() << "Update photo url Error" << db.lastError().text();
         return false;
     }
+    RefreshModel();
     return true;
 }
 
@@ -123,6 +122,7 @@ bool DbOperate::UpdateIsTaken(const QString &barcode, int isTaken) {
         qDebug() << "Update IsTaken Error" << db.lastError().text();
         return false;
     }
+    RefreshModel();
     return true;
 }
 
@@ -137,6 +137,7 @@ bool DbOperate::UpdateOutDate(const QString &barcode, const QString &outDate) {
         qDebug() << "Update OutDate Error" << db.lastError().text();
         return false;
     }
+    RefreshModel();
     return true;
 }
 
@@ -170,6 +171,21 @@ int DbOperate::GetItemsCount() {
     }
 
     return tempIdx;
+}
+
+void DbOperate::RefreshModel()
+{
+    if(m_expTableModel) {
+        m_expTableModel->select();
+    }
+}
+
+void DbOperate::SetFilter(QString &filterStr)
+{
+    if(m_expTableModel) {
+        m_expTableModel->setFilter(filterStr);
+        m_expTableModel->select();
+    }
 }
 
 bool DbOperate::IsItemExist(const QString &barcode) {
