@@ -8,36 +8,68 @@ Page {
     property alias queryExpressHeight: queryExpress.height
     property alias queryExpressWidth: queryExpress.width
 
-    TextField {
-        id: barcodeFilter
+    Label {
+        id: filterLabel
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.topMargin: 30
-        anchors.left: parent.left
-        anchors.leftMargin: 30
-        width: 100
-        height: 40
-        background: Rectangle {
-            border.color: "black"
-            border.width: 1
-        }
-
-        onTextChanged: {
-            inOutOperator.setBarcodeFilter(barcodeFilter.text);
-        }
+        anchors.topMargin: 20
+        text: "输入单号或者选择日期查询快递信息"
+        font.bold: true
+        font.pointSize: 12
+        font.family: "Arial"
     }
 
-    Button {
+    QC.Button {
         id: resetBtn
-        anchors.top: barcodeFilter.top
-        anchors.left: barcodeFilter.right
+        anchors.top: filterLabel.top
+        anchors.left: filterLabel.right
         anchors.leftMargin: 10
-        height: barcodeFilter.height
+        height: filterLabel.height
         width: 60
         text: "重置"
         onClicked: {
             inOutOperator.resetFilter();
             barcodeFilter.text = "";
+            outDateFilter.dateValue = ""
         }
+    }
+    Label {
+        id: barcodeLabel
+        anchors.top: filterLabel.bottom
+        anchors.topMargin: 20
+        anchors.left: parent.left
+        anchors.leftMargin: 30
+        text: "快递单号:"
+        font.pointSize: 10
+        font.family: "Arial"
+    }
+
+    TextField {
+        id: barcodeFilter
+        anchors.verticalCenter: barcodeLabel.verticalCenter
+        anchors.left: barcodeLabel.right
+        anchors.leftMargin:10
+        width: 100
+        height: 30
+        background: Rectangle {
+            border.color: "black"
+            border.width: 1
+        }
+
+        inputMethodHints : Qt.ImhDate
+        onTextChanged: {
+            inOutOperator.setBarcodeFilter(barcodeFilter.text);
+        }
+    }
+
+    Label {
+        id: outdateLabel
+        anchors.left: barcodeFilter.right
+        anchors.leftMargin: 30
+        anchors.verticalCenter: barcodeFilter.verticalCenter
+        text: "日期:"
+        font.pointSize: 10
+        font.family: "Arial"
     }
 
     QC.TableView {
@@ -82,6 +114,18 @@ Page {
             }
         }
 
+    }
+
+
+    Datepicker {
+        id: outDateFilter
+        anchors.left: outdateLabel.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: outdateLabel.verticalCenter
+        dateValue: (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
+        onDateValueChanged: {
+            inOutOperator.setOutDateFilter(dateValue)
+        }
     }
 }
 

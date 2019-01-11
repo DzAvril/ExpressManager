@@ -7,5 +7,7 @@
         <file>QueryExpress.qml</file>
         <file>funny.jpg</file>
         <file>resource/faceclassifier.xml</file>
+        <file>Datepicker.qml</file>
+        <file>resource/arrow_down.png</file>
     </qresource>
 </RCC>
