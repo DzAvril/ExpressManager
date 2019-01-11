@@ -13,23 +13,22 @@ ApplicationWindow {
         id : bar
         font.bold: true
         font.pointSize: 15
-        contentHeight : 30
         TabButton {
             text: "出库"
             background: Rectangle {
-                color: bar.currentIndex === 0 ? "orange" : "lightblue"
+                color: bar.currentIndex === 0 ? "lime" : "lightblue"
             }
         }
         TabButton {
             text: "统计"
             background: Rectangle {
-                color: bar.currentIndex === 1 ? "orange" : "lightblue"
+                color: bar.currentIndex === 1 ? "lime" : "lightblue"
             }
         }
         TabButton{
             text: "查询"
             background: Rectangle {
-                color: bar.currentIndex === 2 ? "orange" : "lightblue"
+                color: bar.currentIndex === 2 ? "lime" : "lightblue"
             }
         }
     }

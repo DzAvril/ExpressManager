@@ -14,7 +14,7 @@ Page {
         anchors.top: parent.top
         anchors.topMargin: 20
         text: "输入单号或者选择日期查询快递信息"
-        font.bold: true
+//        font.bold: true
         font.pointSize: 12
         font.family: "Arial"
     }
@@ -30,19 +30,12 @@ Page {
         font.family: "Arial"
     }
 
-    TextField {
+    QC.TextField {
         id: barcodeFilter
         anchors.verticalCenter: barcodeLabel.verticalCenter
         anchors.left: barcodeLabel.right
         anchors.leftMargin:10
         width: 100
-        height: 30
-        background: Rectangle {
-            border.color: "black"
-            border.width: 1
-        }
-
-        inputMethodHints : Qt.ImhDate
         onTextChanged: {
             inOutOperator.setBarcodeFilter(barcodeFilter.text);
         }

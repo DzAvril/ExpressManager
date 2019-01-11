@@ -69,7 +69,7 @@ Item {
                     if(detectedCount === maxCount) {
                         canProcessBarcode = false
                         console.log("Read barcode success, result is " + tag)
-                        barcode.text = tag                        
+                        barcode.text = tag
                         if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
                             captureImage("/" + barcode.text + ".jpg");
                         } else {
@@ -152,7 +152,7 @@ Item {
                 }
             }
 
-            Button {
+            QC.Button {
                 height: barcodeCameraId.height
                 width: 50
                 anchors.left: barcodeCameraId.right
@@ -230,25 +230,18 @@ Item {
                 font.pointSize: 13
             }
 
-            TextInput {
+            TextField {
                 id: barcode
                 width: 132
-                height: barcodeLable.height
+                height: 27
                 text: qsTr("")
-                font.underline: true
                 anchors.left: barcodeLable.right
                 anchors.leftMargin: 5
                 anchors.verticalCenter: barcodeLable.verticalCenter
-                font.family: "Times New Roman"
-                selectionColor: "#c3c3e6"
+                font.family: "Arial"
                 cursorVisible: true
-                autoScroll: false
                 font.pixelSize: 12
                 focus: true
-                persistentSelection : true
-                // Keys.onReturnPressed: {
-                    
-                // }
             }
 
             Text {
@@ -307,13 +300,11 @@ Item {
                 visible: false
             }
 
-            Button {
+            QC.Button {
                 id: button
                 width: 80
                 height: 30
                 text: qsTr("出库")
-                font.pointSize: 16
-                font.bold: true
                 anchors.top: phone.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin:  30
@@ -376,7 +367,7 @@ Item {
                 }
             }
 
-            Button {
+            QC.Button {
                 height: cameraIds.height
                 width: 50
                 anchors.left: cameraIds.right
@@ -467,6 +458,8 @@ Item {
         }
     }
 }
+
+
 
 
 
