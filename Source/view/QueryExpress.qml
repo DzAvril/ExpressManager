@@ -19,26 +19,12 @@ Page {
         font.family: "Arial"
     }
 
-    QC.Button {
-        id: resetBtn
-        anchors.top: filterLabel.top
-        anchors.left: filterLabel.right
-        anchors.leftMargin: 10
-        height: filterLabel.height
-        width: 60
-        text: "重置"
-        onClicked: {
-            inOutOperator.resetFilter();
-            barcodeFilter.text = "";
-            outDateFilter.dateValue = ""
-        }
-    }
     Label {
         id: barcodeLabel
         anchors.top: filterLabel.bottom
         anchors.topMargin: 20
         anchors.left: parent.left
-        anchors.leftMargin: 30
+        anchors.leftMargin: 10
         text: "快递单号:"
         font.pointSize: 10
         font.family: "Arial"
@@ -60,16 +46,6 @@ Page {
         onTextChanged: {
             inOutOperator.setBarcodeFilter(barcodeFilter.text);
         }
-    }
-
-    Label {
-        id: outdateLabel
-        anchors.left: barcodeFilter.right
-        anchors.leftMargin: 30
-        anchors.verticalCenter: barcodeFilter.verticalCenter
-        text: "日期:"
-        font.pointSize: 10
-        font.family: "Arial"
     }
 
     QC.TableView {
@@ -117,14 +93,90 @@ Page {
     }
 
 
+    Label {
+        id: outdateLabel
+        anchors.left: barcodeFilter.right
+        anchors.leftMargin: 15
+        anchors.verticalCenter: barcodeFilter.verticalCenter
+        text: "日期:"
+        font.pointSize: 10
+        font.family: "Arial"
+    }
+
     Datepicker {
         id: outDateFilter
         anchors.left: outdateLabel.right
         anchors.leftMargin: 10
         anchors.verticalCenter: outdateLabel.verticalCenter
-        dateValue: (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
         onDateValueChanged: {
             inOutOperator.setOutDateFilter(dateValue)
+            if(dateValue !== "") {
+                startOutDateFilter.dateValue = ""
+                endOutDateFilter.dateValue = ""
+            }
+        }
+    }
+
+    Label {
+        id: startOutdateLabel
+        anchors.left: outDateFilter.right
+        anchors.leftMargin: 15
+        anchors.verticalCenter: outDateFilter.verticalCenter
+        text: "日期范围"
+        font.pointSize: 10
+        font.family: "Arial"
+    }
+
+    Datepicker {
+        id: startOutDateFilter
+        anchors.left: startOutdateLabel.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: startOutdateLabel.verticalCenter
+        onDateValueChanged: {
+            inOutOperator.setStartOutDateFilter(dateValue)
+            if(dateValue !== ""){
+                outDateFilter.dateValue = ""
+            }
+        }
+    }
+
+    Label {
+        id: to
+        anchors.left: startOutDateFilter.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: startOutDateFilter.verticalCenter
+        text: "到"
+        font.pointSize: 10
+        font.family: "Arial"
+    }
+
+    Datepicker {
+        id: endOutDateFilter
+        anchors.left: to.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: to.verticalCenter
+        onDateValueChanged: {
+            inOutOperator.setEndOutDateFilter(dateValue)
+            if(dateValue !== ""){
+                outDateFilter.dateValue = ""
+            }
+        }
+    }
+
+    QC.Button {
+        id: resetBtn
+        anchors.top: endOutDateFilter.top
+        anchors.left: endOutDateFilter.right
+        anchors.leftMargin: 10
+        height: endOutDateFilter.height
+        width: 60
+        text: "重置"
+        onClicked: {
+            inOutOperator.resetFilter();
+            barcodeFilter.text = "";
+            outDateFilter.dateValue = ""
+            startOutDateFilter.dateValue = ""
+            endOutDateFilter.dateValue = ""
         }
     }
 }

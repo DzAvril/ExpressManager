@@ -29,6 +29,7 @@ class InOutOperator : public QObject {
     CommonHelper *commonHelper;
     QString filterString, filterBarcode, filterOutDate, filterStartOutDate, filterEndOutDate;
     void PackFilterFrame();
+    QList<QString> filters;
   signals:
 
   public slots:

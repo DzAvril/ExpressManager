@@ -58,9 +58,8 @@ bool InOutOperator::isItemAlreadyOut(QString barcode) {
     return false;
 }
 
-void InOutOperator::setBarcodeFilter(QString barcode)
-{
-    if(barcode == "") {
+void InOutOperator::setBarcodeFilter(QString barcode) {
+    if (barcode == "") {
         filterBarcode.clear();
     } else {
         filterBarcode = barcode;
@@ -69,9 +68,8 @@ void InOutOperator::setBarcodeFilter(QString barcode)
     db->SetFilter(filterString);
 }
 
-void InOutOperator::setOutDateFilter(QString outdate)
-{
-    if(outdate == "") {
+void InOutOperator::setOutDateFilter(QString outdate) {
+    if (outdate == "") {
         filterOutDate.clear();
     } else {
         filterOutDate = outdate;
@@ -80,9 +78,8 @@ void InOutOperator::setOutDateFilter(QString outdate)
     db->SetFilter(filterString);
 }
 
-void InOutOperator::setStartOutDateFilter(QString startOutDate)
-{
-    if(startOutDate == "") {
+void InOutOperator::setStartOutDateFilter(QString startOutDate) {
+    if (startOutDate == "") {
         filterStartOutDate.clear();
     } else {
         filterStartOutDate = startOutDate;
@@ -91,9 +88,8 @@ void InOutOperator::setStartOutDateFilter(QString startOutDate)
     db->SetFilter(filterString);
 }
 
-void InOutOperator::setEndOutDateFilter(QString endOutDate)
-{
-    if(endOutDate == "") {
+void InOutOperator::setEndOutDateFilter(QString endOutDate) {
+    if (endOutDate == "") {
         filterEndOutDate.clear();
     } else {
         filterEndOutDate = endOutDate;
@@ -102,8 +98,7 @@ void InOutOperator::setEndOutDateFilter(QString endOutDate)
     db->SetFilter(filterString);
 }
 
-void InOutOperator::resetFilter()
-{
+void InOutOperator::resetFilter() {
     filterString.clear();
     filterBarcode.clear();
     filterOutDate.clear();
@@ -116,34 +111,25 @@ DbOperate *InOutOperator::expDb() const {
     return db;
 }
 
-void InOutOperator::PackFilterFrame()
-{
+void InOutOperator::PackFilterFrame() {
     filterString.clear();
-    if(!filterBarcode.isEmpty()) {
-        filterString += QString("Barcode like '%1%'").arg(filterBarcode);
-        if(!filterOutDate.isEmpty()) {
+    filters.clear();
+    if (!filterBarcode.isEmpty()) {
+        filters.append(QString("Barcode like '%1%'").arg(filterBarcode));
+    }
+    if (!filterOutDate.isEmpty()) {
+        filters.append(QString("strftime('%Y-%m-%d', OutDate) = '%1'").arg(filterOutDate));
+    }
+    if ((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
+        filters.append(QString("strftime('%Y-%m-%d', OutDate) >= '%1' and strftime('%Y-%m-%d', OutDate) <= '%2' ").arg(
+                           filterStartOutDate, filterEndOutDate));
+    }
+    for (int ix = 0; ix < filters.size(); ++ix) {
+        if (ix != (filters.size() - 1)) {
+            filterString += filters.at(ix);
             filterString += " and ";
-            filterString += QString("todo");
-            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
-                filterString += " and ";
-                filterString += QString("todo");
-            }
         } else {
-            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
-                filterString += QString("todo");
-            }
-        }
-    } else {
-        if(!filterOutDate.isEmpty()) {
-            filterString += QString("todo");
-            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
-                filterString += " and ";
-                filterString += QString("todo");
-            }
-        } else {
-            if((!filterStartOutDate.isEmpty()) && (!filterEndOutDate.isEmpty())) {
-                filterString += QString("todo");
-            }
+            filterString += filters.at(ix);
         }
     }
     qDebug() << "Filter string is " << filterString;
