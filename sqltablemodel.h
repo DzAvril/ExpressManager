@@ -11,7 +11,7 @@
 class SqlTableModel : public QSqlTableModel {
     Q_OBJECT
   public:
-    SqlTableModel(QObject *parent = nullptr);
+    SqlTableModel(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
   protected:
     Q_INVOKABLE QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;

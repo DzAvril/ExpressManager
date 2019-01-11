@@ -22,45 +22,6 @@ int main(int argc, char *argv[]) {
     FileIo *fileIo = FileIo::getInstance();
     CommonHelper *commonHelper = CommonHelper::getInstance();
     InOutOperator *inOutOperator = new InOutOperator();
-
-    bool dbStarted;
-    QString errorString;
-    PersonDatabaHandler db("mydata.db");
-    db.start(&dbStarted, &errorString, [&](SqlDatabaseHandler * db) {
-        SqlTable personTable;
-
-        SqlField idField;
-        SqlField nameField;
-        SqlField ageField;
-        idField.setName("id");
-        idField.setType(SqlField::FieldType::INT);
-        idField.SetConstraints(SqlField::FieldConstranints::PRIMARY_KEY
-                               | SqlField::FieldConstranints::AUTO_INCREMENT
-                               | SqlField::FieldConstranints::NOT_NULL);
-        nameField.setName("name");
-        nameField.setType(SqlField::FieldType::STRING);
-        nameField.SetConstraints(SqlField::FieldConstranints::NOT_NULL);
-
-        ageField.setName("age");
-        ageField.setType(SqlField::FieldType::INT);
-        ageField.SetConstraints(SqlField::FieldConstranints::NONE);
-
-        personTable.setName("person");
-        personTable.addField(idField);
-        personTable.addField(nameField);
-        personTable.addField(ageField);
-
-        db->addTable(personTable);
-
-    });
-    if (dbStarted) {
-        qDebug() << "Database is started.";
-    } else {
-        qDebug() << "error : " << errorString;
-        return -1;
-    }
-    engine.rootContext()->setContextProperty("personModel", db.personTableModel());
-
     engine.rootContext()->setContextProperty(QStringLiteral("speech"),
             speech);
     engine.rootContext()->setContextProperty(QStringLiteral("fileIo"),

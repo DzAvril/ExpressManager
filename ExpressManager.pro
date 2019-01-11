@@ -29,11 +29,11 @@ SOURCES += \
     facedetectfilter.cpp \
     commonhelper.cpp \
     inoutoperator.cpp \
-    sqlfield.cpp \
-    sqlrecord.cpp \
-    sqltable.cpp \
-    sqldatabasehandler.cpp \
-    persondatabahandler.cpp \
+#    sqlfield.cpp \
+#    sqlrecord.cpp \
+#    sqltable.cpp \
+#    sqldatabasehandler.cpp \
+#    persondatabahandler.cpp \
     sqltablemodel.cpp
 
 RESOURCES += qml.qrc
@@ -76,11 +76,11 @@ HEADERS += \
     facedetectfilter.h \
     commonhelper.h \
     inoutoperator.h \
-    sqlfield.h \
-    sqlrecord.h \
-    sqltable.h \
-    sqldatabasehandler.h \
-    persondatabahandler.h \
+#    sqlfield.h \
+#    sqlrecord.h \
+#    sqltable.h \
+#    sqldatabasehandler.h \
+#    persondatabahandler.h \
     sqltablemodel.h
 
 #qml_scenes.depends = $$PWD/resources/scene1.qml $$PWD/resources/scene2.qml ...

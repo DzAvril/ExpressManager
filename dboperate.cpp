@@ -24,9 +24,9 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
             qDebug("Table record is exist.");
         }
     }
-    m_expTableModel = new SqlTableModel(this);
+    m_expTableModel = new SqlTableModel(this, db);
 
-    m_expTableModel->setTable("person");
+    m_expTableModel->setTable("record");
     m_expTableModel->select();
 }
 

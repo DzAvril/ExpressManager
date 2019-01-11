@@ -30,42 +30,42 @@ Page {
 //        }
 //    }
 
-    QC.TableView {
-        model: personModel
-        anchors.fill: parent
-        onClicked: {
-            console.log("row: " + row);
-        }
+//    QC.TableView {
+//        model: personModel
+//        anchors.fill: parent
+//        onClicked: {
+//            console.log("row: " + row);
+//        }
 
-        QC.TableViewColumn{
-            role: "name"
-            title: "Name"
-            width: 200
-        }
+//        QC.TableViewColumn{
+//            role: "name"
+//            title: "Name"
+//            width: 200
+//        }
 
-        QC.TableViewColumn{
-            role: "age"
-            title: "Age"
-            width: 200
-        }
+//        QC.TableViewColumn{
+//            role: "age"
+//            title: "Age"
+//            width: 200
+//        }
 
-        rowDelegate: Rectangle {
-            height: 30
-            SystemPalette {
-                id: myPalette
-                colorGroup: SystemPalette.Active
-            }
-            color: {
-                var baseColor = styleData.alternate ?
-                            myPalette.alternateBase
-                          : myPalette.base;
-                return styleData.selected ?
-                            myPalette.highlight
-                          : baseColor;
-            }
-        }
+//        rowDelegate: Rectangle {
+//            height: 30
+//            SystemPalette {
+//                id: myPalette
+//                colorGroup: SystemPalette.Active
+//            }
+//            color: {
+//                var baseColor = styleData.alternate ?
+//                            myPalette.alternateBase
+//                          : myPalette.base;
+//                return styleData.selected ?
+//                            myPalette.highlight
+//                          : baseColor;
+//            }
+//        }
 
-    }
+//    }
     QC.TableView {
         model: expModel
         anchors.fill: parent

@@ -1,8 +1,8 @@
 #include "sqltablemodel.h"
 #include <QtDebug>
 
-SqlTableModel::SqlTableModel(QObject *parent)
-    : QSqlTableModel(parent) {
+SqlTableModel::SqlTableModel(QObject *parent, QSqlDatabase db)
+    : QSqlTableModel(parent, db) {
 
 }
 
@@ -20,6 +20,7 @@ QVariant SqlTableModel::data(const QModelIndex &idx, int role) const {
 QHash<int, QByteArray> SqlTableModel::roleNames() const {
     QHash<int, QByteArray> roles;
     const int ncols = columnCount();
+    qDebug() << "Column numbers is " << ncols;
     for (int ix = 0; ix < ncols; ++ix) {
         roles.insert(Qt::UserRole + ix + 1,
                      QVariant(headerData(ix, Qt::Horizontal).toString())
