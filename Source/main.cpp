@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
     QZXing::registerQMLTypes();
 
-    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/main.qml")));
+    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/Source/view/main.qml")));
     QObject *object = component.create();
     startup.SetObject(object);
 

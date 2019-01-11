@@ -1,13 +1,12 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>InHouse.qml</file>
-        <file>OutHouse.qml</file>
-        <file>Statistics.qml</file>
-        <file>QueryExpress.qml</file>
-        <file>funny.jpg</file>
+        <file>Source/view/main.qml</file>
+        <file>Source/view/InHouse.qml</file>
+        <file>Source/view/OutHouse.qml</file>
+        <file>Source/view/Statistics.qml</file>
+        <file>Source/view/QueryExpress.qml</file>
         <file>resource/faceclassifier.xml</file>
-        <file>Datepicker.qml</file>
+        <file>Source/view/Datepicker.qml</file>
         <file>resource/arrow_down.png</file>
     </qresource>
 </RCC>

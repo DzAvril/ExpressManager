@@ -3,21 +3,20 @@
 #include "dboperate.h"
 #include <QObject>
 
-class Startup : public QObject
-{
+class Startup : public QObject {
     Q_OBJECT
-public:
+  public:
     explicit Startup(QObject *parent = nullptr);
     void SetObject(QObject *obj);
     void SystemUp();
 
-private:
+  private:
     QObject *object;
     DbOperate *dbOp;
 
-signals:
+  signals:
 
-public slots:
+  public slots:
 };
 
 #endif // Startup_H

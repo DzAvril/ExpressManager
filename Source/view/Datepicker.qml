@@ -30,7 +30,7 @@ TextField
         anchors.bottomMargin: 0
         anchors.top: parent.top
         anchors.topMargin: 0
-        iconSource: "./resource/arrow_down.png"
+        iconSource: "../resource/arrow_down.png"
 //        onClicked: calendar.visible = !calendar.visible
     }
 

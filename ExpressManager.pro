@@ -21,19 +21,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
-    startup.cpp \
-    dboperate.cpp \
-    speech.cpp \
-    fileio.cpp \
-    facedetectfilter.cpp \
-    commonhelper.cpp \
-    inoutoperator.cpp \
-    sqltablemodel.cpp
+        Source/main.cpp \
+    Source/startup.cpp \
+    Source/database/dboperate.cpp \
+    Source/common/speech.cpp \
+    Source/common/fileio.cpp \
+    Source/opencv/facedetectfilter.cpp \
+    Source/common/commonhelper.cpp \
+    Source/database/inoutoperator.cpp \
+    Source/database/sqltablemodel.cpp
 
 RESOURCES += qml.qrc
 
 INCLUDEPATH += C:/opencv-4.0.1/build/install/include
+INCLUDEPATH += Source/common \
+Source/database \
+Source/opencv \
 
 LIBS += libopencv_core401.dll \
 -lopencv_imgproc401.dll \
@@ -63,15 +66,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    startup.h \
-    dboperate.h \
-    config.h \
-    speech.h \
-    fileio.h \
-    facedetectfilter.h \
-    commonhelper.h \
-    inoutoperator.h \
-    sqltablemodel.h
+    Source/startup.h \
+    Source/database/dboperate.h \
+    Source/common/config.h \
+    Source/common/speech.h \
+    Source/common/fileio.h \
+    Source/opencv/facedetectfilter.h \
+    Source/common/commonhelper.h \
+    Source/database/inoutoperator.h \
+    Source/database/sqltablemodel.h
 
 #qml_scenes.depends = $$PWD/resources/scene1.qml $$PWD/resources/scene2.qml ...
 #qml_scenes.commands =
