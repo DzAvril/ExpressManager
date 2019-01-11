@@ -4,7 +4,6 @@ import QtQuick.Controls 1.4
 TextField
 {
     property string dateValue
-//    property alias outHoustPageHeight: outHoustPage.height
 
 
     Calendar{
