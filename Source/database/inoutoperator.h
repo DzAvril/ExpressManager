@@ -20,6 +20,7 @@ class InOutOperator : public QObject {
     Q_INVOKABLE void setStartOutDateFilter(QString startOutDate);
     Q_INVOKABLE void setEndOutDateFilter(QString endOutDate);
     Q_INVOKABLE void resetFilter();
+    Q_INVOKABLE void updateOrderPhoto(QString barcode, QString url);
     DbOperate *expDb() const;
   private:
     DbOperate *db;

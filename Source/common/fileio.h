@@ -9,7 +9,7 @@ class FileIo : public QObject {
     bool IsPathExist(const QString &path);
     bool CreateDir(const QString &path);
     static FileIo *getInstance();
-    Q_INVOKABLE const QString getTempPath();
+    Q_INVOKABLE const QString getPhotoPath();
     bool DeleteFile(const QString &path);
     static const QString GetCurrentPath();
   private:

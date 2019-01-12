@@ -26,6 +26,7 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
     }
     m_expTableModel = new SqlTableModel(this, db);
     m_expTableModel->setTable("record");
+    m_expTableModel->setSort(OUTDATE, Qt::SortOrder::DescendingOrder);
     RefreshModel();
 }
 
@@ -111,6 +112,21 @@ bool DbOperate::UpdateClientPhotoUrl(const QString &barcode, QString &clientPhot
     return true;
 }
 
+bool DbOperate::UpdateOrderPhotoUrl(const QString &barcode, QString &photoUrl) {
+    QSqlQuery query(db);
+    QString strTemp;
+    strTemp.sprintf("UPDATE record SET ExpOrderPhotoUrl ='%s'WHERE Barcode='%s'",
+                    photoUrl.toStdString().c_str(),
+                    barcode.toStdString().c_str());
+    query.exec(strTemp);
+    if (!query.isActive()) {
+        qDebug() << "Update photo url Error" << db.lastError().text();
+        return false;
+    }
+    RefreshModel();
+    return true;
+}
+
 bool DbOperate::UpdateIsTaken(const QString &barcode, int isTaken) {
     QSqlQuery query(db);
     QString strTemp;
@@ -173,16 +189,14 @@ int DbOperate::GetItemsCount() {
     return tempIdx;
 }
 
-void DbOperate::RefreshModel()
-{
-    if(m_expTableModel) {
+void DbOperate::RefreshModel() {
+    if (m_expTableModel) {
         m_expTableModel->select();
     }
 }
 
-void DbOperate::SetFilter(QString &filterStr)
-{
-    if(m_expTableModel) {
+void DbOperate::SetFilter(QString &filterStr) {
+    if (m_expTableModel) {
         m_expTableModel->setFilter(filterStr);
         m_expTableModel->select();
     }

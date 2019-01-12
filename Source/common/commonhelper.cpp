@@ -2,6 +2,7 @@
 #include <QTime>
 #include <QCoreApplication>
 #include "opencv2/opencv.hpp"
+#include <QDebug>
 
 CommonHelper::CommonHelper(QObject *parent) : QObject(parent) {
 

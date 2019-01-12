@@ -13,6 +13,7 @@ Item {
     property string barcodeResult: ""
     property int maxCount : 3
     property bool canProcessBarcode: true
+    property  string  orderPhotoUrl: ""
 
     property alias outHoustPageHeight: outHoustPage.height
     property alias outHoustPageWidth: outHoustPage.width
@@ -54,7 +55,7 @@ Item {
             enabledDecoders: QZXing.DecoderFormat_CODE_128 | QZXing.DecoderFormat_EAN_13
             onTagFound: {
                 if(canProcessBarcode){
-                    console.log("barcode detected :" + tag)
+//                    console.log("barcode detected :" + tag)
                     if(detectedCount != 0) {
                         if(barcodeResult === tag) {
                             detectedCount++
@@ -68,10 +69,11 @@ Item {
                     }
                     if(detectedCount === maxCount) {
                         canProcessBarcode = false
-                        console.log("Read barcode success, result is " + tag)
+//                        console.log("Read barcode success, result is " + tag)
                         barcode.text = tag
                         if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
                             captureImage("/" + barcode.text + ".jpg");
+                            captureExpOrder("/" + barcode.text + "_order.jpg")
                         } else {
                             canProcessBarcode = true
                             barcode.text = ""
@@ -87,18 +89,26 @@ Item {
     }
 
     function captureImage(photoName) {
-        speech.say("开始拍照")
-//        while(!isFaceDetected) {
-//            speech.say("未检测到人脸")
-//            commonHelper.delay(5000)
-//        }
-        camera.imageCapture.captureToLocation(fileIo.getTempPath() + photoName);
+        // speech.say("开始拍照")
+        while(!isFaceDetected) {
+            speech.say("未检测到人脸")
+            commonHelper.delay(5000)
+        }
+        camera.imageCapture.captureToLocation(fileIo.getPhotoPath() + photoName);
+    }
+
+    function captureExpOrder(photoName) {
+        barcodeCamera.imageCapture.captureToLocation(fileIo.getPhotoPath() + photoName);
     }
 
     function processOut(clientPhotoUrl) {
         //since express-in fucntion is not implement yet, so we fake express-in process first
         if(inOutOperator.in(barcode.text, name.text, phone.text)){
             if(inOutOperator.out(barcode.text, clientPhotoUrl)) {
+                commonHelper.delay(500)
+                if(orderPhotoUrl !== "") {
+                    inOutOperator.updateOrderPhoto(barcode.text, orderPhotoUrl)
+                }
                 return true;
             }
         }
@@ -182,7 +192,7 @@ Item {
                         //todo
                     }
                     onImageSaved: {
-                        //todo
+                        orderPhotoUrl = barcodeCamera.imageCapture.capturedImagePath
                     }
                 }
             }
@@ -394,7 +404,7 @@ Item {
                 imageCapture {
                     onImageCaptured : {
                         photoPreview.source = preview  // Show the preview in an Image
-                        speech.say("拍照成功")
+                        // speech.say("拍照成功")
                     }
                     onImageSaved: {
                         if(processOut(camera.imageCapture.capturedImagePath)) {

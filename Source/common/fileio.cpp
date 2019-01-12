@@ -43,8 +43,8 @@ FileIo *FileIo::getInstance() {
     return instance;
 }
 
-const QString FileIo::getTempPath() {
-    return QGuiApplication::applicationDirPath() + TEMP_PATH;
+const QString FileIo::getPhotoPath() {
+    return QGuiApplication::applicationDirPath() + PHOTO_PATH;
 }
 
 bool FileIo::DeleteFile(const QString &path) {

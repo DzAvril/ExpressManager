@@ -34,6 +34,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
     if (!db->IsItemExist(barcode)) {
         qDebug("There is no %s in database.", barcode.toStdString().c_str());
         speech->say(NO_SUCH_ITEM);
+        fileIo->DeleteFile(photoUrl);
         return false;
     }
     QDateTime timestamp = QDateTime::currentDateTime();
@@ -105,6 +106,23 @@ void InOutOperator::resetFilter() {
     filterStartOutDate.clear();
     filterEndOutDate.clear();
     db->SetFilter(filterString);
+}
+
+void InOutOperator::updateOrderPhoto(QString barcode, QString photoUrl) {
+    if (!db->IsItemExist(barcode)) {
+        qDebug("There is no %s in database.", barcode.toStdString().c_str());
+        speech->say(NO_SUCH_ITEM);
+        fileIo->DeleteFile(photoUrl);
+        return;
+    }
+    QDateTime timestamp = QDateTime::currentDateTime();
+    QString timeStr = timestamp.toString("yyyy-MM-dd hh:mm:ss");
+    commonHelper->PutTextToImage(photoUrl, barcode, timeStr);
+    if (!(db->UpdateOrderPhotoUrl(barcode, photoUrl))) {
+        fileIo->DeleteFile(photoUrl);
+        return;
+    }
+    return;
 }
 
 DbOperate *InOutOperator::expDb() const {

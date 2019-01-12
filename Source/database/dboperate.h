@@ -12,6 +12,7 @@ class DbOperate : public QObject {
     bool OpenDB(const QString &path);
     bool InsertItem(const QString &barcode, QString &name, QString &phone);
     bool UpdateClientPhotoUrl(const QString &barcode, QString &photoUrl);
+    bool UpdateOrderPhotoUrl(const QString &barcode, QString &photoUrl);
     bool UpdateIsTaken(const QString &barcode, int isTaken);
     bool UpdateOutDate(const QString &barcode, const QString &outDate);
     bool IsItemExist(const QString &barcode);
@@ -19,6 +20,16 @@ class DbOperate : public QObject {
     SqlTableModel *expTableModel() const;
     void RefreshModel();
     void SetFilter(QString &filterStr);
+    enum COLUMN_NAME {
+        BARCODE = 0,
+        NAME,
+        PHONE,
+        INDATE,
+        OUTDATE,
+        ISTAKEN,
+        EXPORDERPHOTOURL,
+        CLIENTPHOTURL
+    };
 
   private:
     QSqlDatabase db;

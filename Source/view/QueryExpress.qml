@@ -56,21 +56,29 @@ Item {
             QC.TableViewColumn{
                 role: "Barcode"
                 title: "单号"
-                width: parent.width / 3
+                width: parent.width / 4
             }
 
             QC.TableViewColumn{
                 role: "OutDate"
                 title: "出库时间"
-                width: parent.width / 3
+                width: parent.width / 4
             }
 
             QC.TableViewColumn{
                 role: "ClientPhotoUrl"
                 title: "存照"
-                width: parent.width / 3
+                width: parent.width / 4
                 delegate: imageDelegate
             }
+
+            QC.TableViewColumn{
+                role: "ExpOrderPhotoUrl"
+                title: "快递单存照"
+                width: parent.width / 4
+                delegate: imageDelegate
+            }
+
 
             rowDelegate: Rectangle {
                 id: rowDel
@@ -95,16 +103,17 @@ Item {
                 Image {
                     anchors.fill: parent
                     fillMode: Image.PreserveAspectFit
-                    cache : true;
                     asynchronous: true;
-                    source: "file:///" + styleData.value
+                    source: styleData.value ? "file:///" + styleData.value : ""
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            console.log(parent.source)
-                            previewItem.visible = true
-                            bulr.visible = true
-                            preview.source = parent.source
+                            if(styleData.value) {
+                                console.log(parent.source)
+                                previewItem.visible = true
+                                bulr.visible = true
+                                preview.source = parent.source
+                            }
                         }
                     }
                 }
