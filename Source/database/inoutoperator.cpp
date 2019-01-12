@@ -10,7 +10,9 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     fileIo = FileIo::getInstance();
     commonHelper = CommonHelper::getInstance();
     model = db->expTableModel();
-    filterString.clear();
+    filterString =
+        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now')");
+    db->SetFilter(filterString);
     filterBarcode.clear();
     filterOutDate.clear();
     filterStartOutDate.clear();
@@ -100,11 +102,12 @@ void InOutOperator::setEndOutDateFilter(QString endOutDate) {
 }
 
 void InOutOperator::resetFilter() {
-    filterString.clear();
     filterBarcode.clear();
     filterOutDate.clear();
     filterStartOutDate.clear();
     filterEndOutDate.clear();
+    filterString =
+        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now')");
     db->SetFilter(filterString);
 }
 
