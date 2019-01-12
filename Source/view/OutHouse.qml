@@ -41,6 +41,12 @@ Item {
         }
     }
 
+    SoundEffect {
+            id: barcodeScanedTipSound
+            volume: 1
+            source: "qrc:/resource/scaned.wav"
+        }
+
     QZXingFilter{
         id: zxingFilter
         captureRect: {
@@ -71,6 +77,7 @@ Item {
                         canProcessBarcode = false
 //                        console.log("Read barcode success, result is " + tag)
                         barcode.text = tag
+                        barcodeScanedTipSound.play()
                         if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
                             captureImage("/" + barcode.text + ".jpg");
                             captureExpOrder("/" + barcode.text + "_order.jpg")
