@@ -86,7 +86,7 @@ Item {
                 anchors.bottom: totalNumber.bottom
                 anchors.left: endDate.right
                 anchors.leftMargin: 10
-                text: "共收件："
+                text: "共发件："
                 font.pointSize: 12
                 font.family: "Arial"
             }

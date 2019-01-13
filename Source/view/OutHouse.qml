@@ -411,7 +411,7 @@ Item {
 
                 imageCapture {
                     onImageCaptured : {
-                        photoPreview.source = preview  // Show the preview in an Image
+//                        photoPreview.source = preview  // Show the preview in an Image
                         // speech.say("拍照成功")
                     }
                     onImageSaved: {
@@ -457,15 +457,15 @@ Item {
                 }
             }
 
-            Image {
-                id: photoPreview
-                width: height * 4 / 3
-                anchors.top: videoOut.bottom
-                anchors.topMargin: 5
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                anchors.horizontalCenter: videoOut.horizontalCenter
-            }
+//            Image {
+//                id: photoPreview
+//                width: height * 4 / 3
+//                anchors.top: videoOut.bottom
+//                anchors.topMargin: 5
+//                anchors.bottom: parent.bottom
+//                anchors.bottomMargin: 5
+//                anchors.horizontalCenter: videoOut.horizontalCenter
+//            }
         }
         Connections {
     //        target: dbOperate

@@ -17,7 +17,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 20
-            text: "输入单号或者选择日期查询快递信息"
+            text: "输入单号或者选择日期查询出库信息"
             font.bold: true
             font.pointSize: 12
             font.family: "Arial"
@@ -70,18 +70,21 @@ Item {
                 title: "序号"
                 width: 50
                 delegate: indexDelegate
+
             }
 
             QC.TableViewColumn{
                 role: "Barcode"
                 title: "单号"
                 width: parent.width / 4
+                delegate: textDelegate
             }
 
             QC.TableViewColumn{
                 role: "OutDate"
                 title: "出库时间"
                 width: parent.width / 4
+                delegate: textDelegate
             }
 
             QC.TableViewColumn{
@@ -121,10 +124,22 @@ Item {
             id: indexDelegate
             Text {
                 anchors.fill: parent
-                id: name
                 text: styleData.row + 1
+                font.pointSize: styleData.selected ? 15 : 10
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
+                font.family: "Arial"
+            }
+        }
+
+        Component {
+            id: textDelegate
+            Text {
+                anchors.fill: parent
+                text: styleData.value
+                font.pointSize: styleData.selected ? 15 : 10
+                font.family: "Arial"
+                verticalAlignment: Text.AlignVCenter
             }
         }
         Component {
