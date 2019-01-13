@@ -3,6 +3,7 @@
 #include <QDebug>
 #include "config.h"
 #include <QDateTime>
+#include <QSqlRecord>
 
 InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     db = new DbOperate();
@@ -50,6 +51,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
         return false;
     }
     speech->say(OUT_SUCCESS);
+    emit outSuccess();
     return true;
 }
 
@@ -126,6 +128,26 @@ void InOutOperator::updateOrderPhoto(QString barcode, QString photoUrl) {
         return;
     }
     return;
+}
+
+QString InOutOperator::getEarliestExpDate() const {
+
+    int counts = model->rowCount();
+    if (counts != 0) {
+        QString s = model->record(counts - 1).value(db->OUTDATE).toString();
+        return s.mid(0, 10); // 2019-01-01
+    } else {
+        return nullptr;
+    }
+}
+
+int InOutOperator::getExpCountFromDateRange(QString start, QString end) {
+    QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) >= '%1' and strftime('%Y-%m-%d', OutDate) <= '%2' ").arg(
+                             start, end);
+    db->SetFilter(tempFilter);
+    int count =  model->rowCount();
+    db->SetFilter(filterString);
+    return count;
 }
 
 DbOperate *InOutOperator::expDb() const {

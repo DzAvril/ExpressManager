@@ -131,7 +131,7 @@ Item {
             height: parent.height
             width : parent.width / 2
             anchors.left: parent.left
-
+            Layout.minimumWidth: 320
             Text {
                 id: getExpressNo
                 text: qsTr("单号采集")
@@ -347,6 +347,7 @@ Item {
             height: parent.height
             anchors.right: parent.right
             width :  parent.width / 2
+            Layout.minimumWidth: 320
             Text {
                 id: faceDetect
                 text: qsTr("人像采集")

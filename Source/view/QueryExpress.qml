@@ -12,7 +12,7 @@ Item {
     Item {
         id: subItem
         anchors.fill: parent
-        Label {
+        Text {
             id: filterLabel
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
@@ -21,9 +21,10 @@ Item {
             font.bold: true
             font.pointSize: 12
             font.family: "Arial"
+            renderType: Text.QtRendering
         }
 
-        Label {
+        QC.Label {
             id: barcodeLabel
             anchors.top: filterLabel.bottom
             anchors.topMargin: 20
@@ -44,6 +45,17 @@ Item {
                 inOutOperator.setBarcodeFilter(barcodeFilter.text);
                 tableView.selection.clear()
             }
+        }
+
+        Label{
+            width: 362
+            height: 15
+            anchors.left: tableView.left
+            anchors.bottom: tableView.top
+            anchors.bottomMargin: 5
+            text: "*默认显示最近一个月的数据，查看更多数据请选择日期范围"
+            font.pointSize: 8
+
         }
 
         QC.TableView {
@@ -153,6 +165,7 @@ Item {
             anchors.left: outdateLabel.right
             anchors.leftMargin: 10
             anchors.verticalCenter: outdateLabel.verticalCenter
+            calendarWidth: 100
             onDateValueChanged: {
                 inOutOperator.setOutDateFilter(dateValue)
                 tableView.selection.clear()
@@ -178,6 +191,7 @@ Item {
             anchors.left: startOutdateLabel.right
             anchors.leftMargin: 10
             anchors.verticalCenter: startOutdateLabel.verticalCenter
+            calendarWidth: 100
             onDateValueChanged: {
                 inOutOperator.setStartOutDateFilter(dateValue)
                 tableView.selection.clear()
@@ -202,6 +216,7 @@ Item {
             anchors.left: to.right
             anchors.leftMargin: 10
             anchors.verticalCenter: to.verticalCenter
+            calendarWidth: 100
             onDateValueChanged: {
                 inOutOperator.setEndOutDateFilter(dateValue)
                 tableView.selection.clear()
@@ -263,6 +278,8 @@ Item {
         }
     }
 }
+
+
 /*##^## Designer {
     D{i:0;autoSize:true;height:480;width:640}
 }

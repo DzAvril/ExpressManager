@@ -1,6 +1,7 @@
 QT += quick
 CONFIG += c++11
 QT += sql
+QT += charts
 CONFIG+=release
 QT += texttospeech
 QT += multimedia

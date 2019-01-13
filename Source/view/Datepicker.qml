@@ -3,9 +3,10 @@ import QtQuick.Controls 1.4
 
 TextField
 {
+    id: textField
     property string dateValue
-
-
+    property alias calendarWidth:  textField.width
+    readOnly: true
     Calendar{
         id: calendar
         anchors.topMargin: 0

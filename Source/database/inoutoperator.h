@@ -21,6 +21,8 @@ class InOutOperator : public QObject {
     Q_INVOKABLE void setEndOutDateFilter(QString endOutDate);
     Q_INVOKABLE void resetFilter();
     Q_INVOKABLE void updateOrderPhoto(QString barcode, QString url);
+    Q_INVOKABLE QString getEarliestExpDate() const;
+    Q_INVOKABLE int getExpCountFromDateRange(QString start, QString end);
     DbOperate *expDb() const;
   private:
     DbOperate *db;
@@ -32,7 +34,7 @@ class InOutOperator : public QObject {
     void PackFilterFrame();
     QList<QString> filters;
   signals:
-
+    void outSuccess();
   public slots:
 };
 

@@ -20,7 +20,7 @@ class DbOperate : public QObject {
     SqlTableModel *expTableModel() const;
     void RefreshModel();
     void SetFilter(QString &filterStr);
-    enum COLUMN_NAME {
+    typedef enum {
         BARCODE = 0,
         NAME,
         PHONE,
@@ -29,7 +29,7 @@ class DbOperate : public QObject {
         ISTAKEN,
         EXPORDERPHOTOURL,
         CLIENTPHOTURL
-    };
+    } COLUMN_NAME;
 
   private:
     QSqlDatabase db;

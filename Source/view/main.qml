@@ -5,8 +5,8 @@ import QtQuick.Controls 2.4
 
 ApplicationWindow {
     visible: true
-    minimumWidth : 640
-    minimumHeight : 480
+    minimumWidth : 800
+    minimumHeight : 550
     title: qsTr("Express Manager")
 
     header:TabBar {
@@ -50,8 +50,11 @@ ApplicationWindow {
         Item {
             id: tabSta
             height: parent.height
-            width: parent.height
-            Statistics {}
+            width: parent.width
+            Statistics {
+                statisticsHeight: tabSta.height
+                statisticsWidth: tabSta.width
+            }
         }
         Item {
             id: tabQuery
