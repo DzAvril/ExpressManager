@@ -42,6 +42,7 @@ Item {
             width: 100
             onTextChanged: {
                 inOutOperator.setBarcodeFilter(barcodeFilter.text);
+                tableView.selection.clear()
             }
         }
 
@@ -50,8 +51,14 @@ Item {
             model: expModel
             width: parent.width
             anchors.top: barcodeFilter.bottom
-            anchors.topMargin: 30
+            anchors.topMargin: 50
             anchors.bottom: parent.bottom
+
+            QC.TableViewColumn{
+                title: "序号"
+                width: 50
+                delegate: indexDelegate
+            }
 
             QC.TableViewColumn{
                 role: "Barcode"
@@ -97,6 +104,17 @@ Item {
                 }
             }
         }
+
+        Component {
+            id: indexDelegate
+            Text {
+                anchors.fill: parent
+                id: name
+                text: styleData.row + 1
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
         Component {
             id: imageDelegate
             Item {
@@ -137,6 +155,7 @@ Item {
             anchors.verticalCenter: outdateLabel.verticalCenter
             onDateValueChanged: {
                 inOutOperator.setOutDateFilter(dateValue)
+                tableView.selection.clear()
                 if(dateValue !== "") {
                     startOutDateFilter.dateValue = ""
                     endOutDateFilter.dateValue = ""
@@ -161,6 +180,7 @@ Item {
             anchors.verticalCenter: startOutdateLabel.verticalCenter
             onDateValueChanged: {
                 inOutOperator.setStartOutDateFilter(dateValue)
+                tableView.selection.clear()
                 if(dateValue !== ""){
                     outDateFilter.dateValue = ""
                 }
@@ -184,6 +204,7 @@ Item {
             anchors.verticalCenter: to.verticalCenter
             onDateValueChanged: {
                 inOutOperator.setEndOutDateFilter(dateValue)
+                tableView.selection.clear()
                 if(dateValue !== ""){
                     outDateFilter.dateValue = ""
                 }
