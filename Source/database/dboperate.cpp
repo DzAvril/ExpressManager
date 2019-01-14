@@ -173,10 +173,6 @@ bool DbOperate::IsItemOut(const QString &barcode) {
     return false;
 }
 
-SqlTableModel *DbOperate::expTableModel() const {
-    return m_expTableModel;
-}
-
 int DbOperate::GetItemsCount() {
     QSqlQuery query(db);
     int tempIdx = 0;

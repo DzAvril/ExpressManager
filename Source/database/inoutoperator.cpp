@@ -4,6 +4,7 @@
 #include "config.h"
 #include <QDateTime>
 #include <QSqlRecord>
+#include <QSqlError>
 
 InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     db = new DbOperate();
@@ -51,7 +52,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
         return false;
     }
     speech->say(OUT_SUCCESS);
-    emit outSuccess();
+    emit updateDatabaseDone();
     return true;
 }
 
@@ -134,7 +135,7 @@ QString InOutOperator::getEarliestExpDate() const {
 
     int counts = model->rowCount();
     if (counts != 0) {
-        QString s = model->record(counts - 1).value(db->OUTDATE).toString();
+        QString s = get(counts - 1, db->OUTDATE);
         return s.mid(0, 10); // 2019-01-01
     } else {
         return nullptr;
@@ -150,8 +151,21 @@ int InOutOperator::getExpCountFromDateRange(QString start, QString end) {
     return count;
 }
 
-DbOperate *InOutOperator::expDb() const {
-    return db;
+QString InOutOperator::get(int row, int role) const
+{
+    return model->record(row).value(role).toString();
+}
+
+bool InOutOperator::deleteRow(int row)
+{
+    if(model->removeRow(row)) {
+        if(model->submit()) {
+            emit updateDatabaseDone();
+            return true;
+        }
+    }
+    qDebug() << "Delete row error : " << model->lastError().text();
+    return false;
 }
 
 void InOutOperator::PackFilterFrame() {

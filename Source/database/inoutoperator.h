@@ -23,7 +23,11 @@ class InOutOperator : public QObject {
     Q_INVOKABLE void updateOrderPhoto(QString barcode, QString url);
     Q_INVOKABLE QString getEarliestExpDate() const;
     Q_INVOKABLE int getExpCountFromDateRange(QString start, QString end);
-    DbOperate *expDb() const;
+    Q_INVOKABLE QString get(int row, int role) const;
+    Q_INVOKABLE bool deleteRow(int row);
+    inline DbOperate *expDb() const {
+        return db;
+    }
   private:
     DbOperate *db;
     SqlTableModel *model;
@@ -34,7 +38,7 @@ class InOutOperator : public QObject {
     void PackFilterFrame();
     QList<QString> filters;
   signals:
-    void outSuccess();
+    void updateDatabaseDone();
   public slots:
 };
 

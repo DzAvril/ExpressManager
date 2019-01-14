@@ -101,6 +101,19 @@ Item {
                 delegate: imageDelegate
             }
 
+            Menu {
+                id: contextMenu
+                MenuItem {
+                    text:  qsTr("删除")
+                    onClicked: {
+                        console.log(tableView.currentRow)
+                        console.log(inOutOperator.get(tableView.currentRow, 0))
+                        if(inOutOperator.deleteRow(tableView.currentRow)) {
+                            tableView.selection.clear()
+                        }
+                    }
+                }
+            }
 
             rowDelegate: Rectangle {
                 id: rowDel
@@ -116,6 +129,16 @@ Item {
                     return styleData.selected ?
                                 myPalette1.shadow
                               : baseColor;
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: {
+                        tableView.currentRow = styleData.row
+                        tableView.selection.clear()
+                        tableView.selection.select(tableView.currentRow)
+                        contextMenu.popup()
+                    }
                 }
             }
 

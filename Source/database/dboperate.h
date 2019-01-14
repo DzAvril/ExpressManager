@@ -17,7 +17,9 @@ class DbOperate : public QObject {
     bool UpdateOutDate(const QString &barcode, const QString &outDate);
     bool IsItemExist(const QString &barcode);
     bool IsItemOut(const QString &barcode);
-    SqlTableModel *expTableModel() const;
+    inline SqlTableModel *expTableModel() const {
+        return m_expTableModel;
+    }
     void RefreshModel();
     void SetFilter(QString &filterStr);
     typedef enum {

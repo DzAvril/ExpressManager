@@ -109,8 +109,7 @@ Item {
     }
     Connections{
         target: inOutOperator
-        onOutSuccess: {
-            console.log("on out success")
+        onUpdateDatabaseDone: {
             totalNumber.text = inOutOperator.getExpCountFromDateRange(startDate.dateValue, endDate.dateValue)
         }
     }
