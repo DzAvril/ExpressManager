@@ -12,6 +12,7 @@ class FileIo : public QObject {
     Q_INVOKABLE const QString getPhotoPath();
     bool DeleteFile(const QString &path);
     static const QString GetCurrentPath();
+    Q_INVOKABLE void revealInExplore(const QString);
   private:
     explicit FileIo(QObject *parent = nullptr);
     FileIo(const FileIo &);

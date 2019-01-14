@@ -1,9 +1,11 @@
 #include "fileio.h"
 #include <QDir>
 #include <QDebug>
-#include <QGuiApplication>
+#include <QApplication>
 #include "config.h"
-
+#include <QFileInfo>
+#include <QProcess>
+#include <QMessageBox>
 FileIo::FileIo(QObject *parent) : QObject(parent) {
 
 }
@@ -54,4 +56,10 @@ bool FileIo::DeleteFile(const QString &path) {
 
 const QString FileIo::GetCurrentPath() {
     return QGuiApplication::applicationDirPath();
+}
+
+void FileIo::revealInExplore(const QString filePath) {
+    QStringList args;
+    args << "/select," << QDir::toNativeSeparators(filePath);
+    QProcess::startDetached("explorer", args);
 }

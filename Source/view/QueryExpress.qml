@@ -331,7 +331,20 @@ Item {
                 bulr.visible = false
             }
 
+        }        
+
+        Menu {
+            id: revealInExplore
+            MenuItem {
+                text:  qsTr("在文件系统中打开")
+                onClicked: {
+                    console.log(tableView.currentRow)
+                    console.log(inOutOperator.get(tableView.currentRow, 7))
+                    fileIo.revealInExplore(preview.source)
+                }
+            }
         }
+
 
         Image {
             id: preview
@@ -342,6 +355,10 @@ Item {
             asynchronous: true
             MouseArea {
                 anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: {
+                    revealInExplore.popup()
+                }
             }
         }
     }

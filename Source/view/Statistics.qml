@@ -123,15 +123,15 @@ Item {
                 LineSeries {
 //                    name: "LineSeries"
                     axisX: ValueAxis {
-                        min: 1
-                        max: 30
+//                        min: 1
+//                        max: 30
 
-                        tickAnchor: 1
-                        tickType : ValueAxis.TicksDynamic
+//                        tickAnchor: 1
+//                        tickType : ValueAxis.TicksDynamic
                     }
                     axisY: ValueAxis {
-                        min: 0
-                        max: 5
+//                        min: 0
+//                        max: 5
                     }
                     XYPoint { x: 1; y: 0 }
                     XYPoint { x: 2; y: 2.1 }
