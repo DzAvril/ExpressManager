@@ -8,6 +8,7 @@
         <file>resource/faceclassifier.xml</file>
         <file>Source/view/Datepicker.qml</file>
         <file>resource/arrow_down.png</file>
+        <file>resource/header.png</file>
         <file>qtquickcontrols2.conf</file>  
         <file>resource/scaned.wav</file>    
     </qresource>

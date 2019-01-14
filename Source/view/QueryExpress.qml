@@ -118,6 +118,35 @@ Item {
                               : baseColor;
                 }
             }
+
+            headerDelegate: BorderImage {
+                    height: textItem.implicitHeight * 1.2
+                    source: "../../resource/header.png"
+                    border.left: 4
+                    border.bottom: 2
+                    border.top: 2
+                    Text {
+                        id: textItem
+                        anchors.fill: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: styleData.textAlignment
+                        anchors.leftMargin: 12
+                        text: styleData.value
+                        font.pointSize: 13
+                        font.bold: true
+                        elide: Text.ElideRight
+                        renderType: Text.NativeRendering
+                    }
+                    Rectangle {
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 1
+                        anchors.topMargin: 1
+                        width: 1
+                        color: "#ccc"
+                    }
+                }
         }
 
         Component {
@@ -251,6 +280,7 @@ Item {
             text: "重置"
             onClicked: {
                 inOutOperator.resetFilter();
+                tableView.selection.clear();
                 barcodeFilter.text = "";
                 outDateFilter.dateValue = ""
                 startOutDateFilter.dateValue = ""
