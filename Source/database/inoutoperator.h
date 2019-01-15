@@ -6,9 +6,11 @@
 #include "speech.h"
 #include "fileio.h"
 #include "commonhelper.h"
+#include <QVariantList>
 
 class InOutOperator : public QObject {
     Q_OBJECT
+    Q_PROPERTY(QStringList  yearList READ yearList)
   public:
     explicit InOutOperator(QObject *parent = nullptr);
     Q_INVOKABLE bool in(QString barcode, QString name = nullptr,
@@ -23,8 +25,11 @@ class InOutOperator : public QObject {
     Q_INVOKABLE void updateOrderPhoto(QString barcode, QString url);
     Q_INVOKABLE QString getEarliestExpDate() const;
     Q_INVOKABLE int getExpCountFromDateRange(QString start, QString end);
+    Q_INVOKABLE QList<QMap<int, int>> getExpCountOfMonth(QString month);
+    Q_INVOKABLE int getExpCountOfDay(QString day);
     Q_INVOKABLE QString get(int row, int role) const;
     Q_INVOKABLE bool deleteRow(int row);
+    QStringList  yearList();
     inline DbOperate *expDb() const {
         return db;
     }
@@ -37,6 +42,7 @@ class InOutOperator : public QObject {
     QString filterString, filterBarcode, filterOutDate, filterStartOutDate, filterEndOutDate;
     void PackFilterFrame();
     QList<QString> filters;
+    QStringList  m_yearList;
   signals:
     void updateDatabaseDone();
   public slots:

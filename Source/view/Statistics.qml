@@ -17,6 +17,7 @@ Item {
             Layout.fillWidth: true
             Layout.minimumHeight: 100
             height: 100
+            z: 100
             Label{
                 id: from
                 anchors.bottom: totalNumber.bottom
@@ -37,7 +38,6 @@ Item {
                 dateValue: inOutOperator.getEarliestExpDate() ? inOutOperator.getEarliestExpDate()
                                                               : (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
                 onDateValueChanged: {
-                    totalNumber.text = inOutOperator.getExpCountFromDateRange(startDate.dateValue, endDate.dateValue)
                 }
             }
             Label{
@@ -59,7 +59,6 @@ Item {
                 calendarWidth: 100
                 dateValue: (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
                 onDateValueChanged: {
-                    totalNumber.text = inOutOperator.getExpCountFromDateRange(startDate.dateValue, endDate.dateValue)
                 }
             }
             Label{
@@ -87,41 +86,110 @@ Item {
             id: yearChart
             Layout.fillWidth: true
             height: (parent.height - total.height) / 2
-            ChartView {
-                title: "year"
-                anchors.fill: parent
-                antialiasing: true
+            z: 90
+            Item {
+                id: setYear
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: 25
+                width: yearCombo.width + yearLbl.width
 
-                LineSeries {
-//                    name: "LineSeries"
-                    XYPoint { x: 1; y: 0 }
-                    XYPoint { x: 2; y: 2.1 }
-                    XYPoint { x: 3; y: 3.3 }
-                    XYPoint { x: 4; y: 2.1 }
-                    XYPoint { x: 5; y: 4.9 }
-                    XYPoint { x: 6; y: 3.0 }
-                    XYPoint { x: 7; y: 3.3 }
-                    XYPoint { x: 8; y: 3.3 }
-                    XYPoint { x: 9; y: 3.3 }
-                    XYPoint { x: 10; y: 3.3 }
-                    XYPoint { x: 11; y: 3.3 }
-                    XYPoint { x: 12; y: 3.3 }
+                ComboBox {
+                    id: yearCombo
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+                    anchors.left: parent.left
+                    height: 25
+                    width: 100
+                    model: inOutOperator.yearList
+                    currentIndex: count - 1
+                  }
+                Label {
+                    id: yearLbl
+                    text: "年趋势图"
+                    anchors.bottom: yearCombo.bottom
+                    anchors.left: yearCombo.right
+                    anchors.leftMargin: 5
+                    font.pointSize: 13
+                    font.family: "Arial"
                 }
             }
-        }
-        Item {
-            id: monthChart
-            Layout.fillWidth: true
-            height: (parent.height - total.height) / 2
             ChartView {
-                anchors.fill: parent
+                anchors.top: setYear.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
                 antialiasing: true
                 animationOptions: ChartView.SeriesAnimations
                 animationDuration: 1000
                 legend.visible: false
 
                 LineSeries {
-//                    name: "LineSeries"
+                    id: year
+//                    XYPoint { x: 1; y: 0 }
+//                    XYPoint { x: 2; y: 2.1 }
+//                    XYPoint { x: 3; y: 3.3 }
+//                    XYPoint { x: 4; y: 2.1 }
+//                    XYPoint { x: 5; y: 4.9 }
+//                    XYPoint { x: 6; y: 3.0 }
+//                    XYPoint { x: 7; y: 3.3 }
+//                    XYPoint { x: 8; y: 3.3 }
+//                    XYPoint { x: 9; y: 3.3 }
+//                    XYPoint { x: 10; y: 3.3 }
+//                    XYPoint { x: 11; y: 3.3 }
+//                    XYPoint { x: 12; y: 3.3 }
+
+                    onHovered: {
+
+                    }
+                }
+            }
+        }
+        Item {
+            id: monthChart
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: (parent.height - total.height) / 2
+            z: 60
+            Item {
+                id: setMonth
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: 25
+                width: monthCombo.width + monthLbl.width
+
+                ComboBox {
+                    id: monthCombo
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+                    anchors.left: parent.left
+                    height: 25
+                    width: 100
+                    model: ["1", "2", "3","4", "5", "6","7", "8", "9","10", "11", "12"]
+                  }
+                Label {
+                    id: monthLbl
+                    text: "月趋势图"
+                    anchors.bottom: monthCombo.bottom
+                    anchors.left: monthCombo.right
+                    anchors.leftMargin: 5
+                    font.pointSize: 13
+                    font.family: "Arial"
+                }
+            }
+            ChartView {
+                id: monthChartView
+                anchors.top: setMonth.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                antialiasing: true
+                animationOptions: ChartView.SeriesAnimations
+                animationDuration: 1000
+
+                legend.visible: false
+
+                LineSeries {
                     axisX: ValueAxis {
 //                        min: 1
 //                        max: 30
@@ -165,7 +233,7 @@ Item {
                     XYPoint { x: 30; y: 3.3 }
 
                     onPressed: {
-                        console.log("onPressed: " + point.x + ", " + point.y)
+//                        console.log("onPressed: " + point.x + ", " + point.y)
                     }
                 }
             }
@@ -176,6 +244,10 @@ Item {
         onUpdateDatabaseDone: {
             totalNumber.text = inOutOperator.getExpCountFromDateRange(startDate.dateValue, endDate.dateValue)
         }
+    }
+    Component.onCompleted: {
+        console.log("Statistics completed");
+        console.log(inOutOperator.getExpCountOfMonth(1))
     }
 }
 

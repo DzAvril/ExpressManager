@@ -178,6 +178,7 @@ Item {
                 anchors.fill: parent
                 text: styleData.row + 1
                 font.pointSize: styleData.selected ? 15 : 10
+                color: styleData.selected ? "white" : "black"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.family: "Arial"
@@ -190,6 +191,7 @@ Item {
                 anchors.fill: parent
                 text: styleData.value
                 font.pointSize: styleData.selected ? 15 : 10
+                color: styleData.selected ? "white" : "black"
                 font.family: "Arial"
                 verticalAlignment: Text.AlignVCenter
             }

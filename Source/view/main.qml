@@ -19,14 +19,14 @@ ApplicationWindow {
                 color: bar.currentIndex === 0 ? "lime" : "lightblue"
             }
         }
-        TabButton {
-            text: "统计"
+        TabButton{
+            text: "查询"
             background: Rectangle {
                 color: bar.currentIndex === 1 ? "lime" : "lightblue"
             }
         }
-        TabButton{
-            text: "查询"
+        TabButton {
+            text: "统计"
             background: Rectangle {
                 color: bar.currentIndex === 2 ? "lime" : "lightblue"
             }
@@ -48,21 +48,21 @@ ApplicationWindow {
             }
         }
         Item {
-            id: tabSta
-            height: parent.height
-            width: parent.width
-            Statistics {
-                statisticsHeight: tabSta.height
-                statisticsWidth: tabSta.width
-            }
-        }
-        Item {
             id: tabQuery
             width: parent.width
             height: parent.height
             QueryExpress {
                 queryExpressHeight:tabQuery.height
                 queryExpressWidth: tabQuery.width
+            }
+        }
+        Item {
+            id: tabSta
+            height: parent.height
+            width: parent.width
+            Statistics {
+                statisticsHeight: tabSta.height
+                statisticsWidth: tabSta.width
             }
         }
     }

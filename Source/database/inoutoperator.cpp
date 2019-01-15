@@ -151,6 +151,27 @@ int InOutOperator::getExpCountFromDateRange(QString start, QString end) {
     return count;
 }
 
+QList<QMap<int, int>> InOutOperator::getExpCountOfMonth(QString month)
+{
+    QList<QMap<int, int>> data;
+    QMap<int, int> item, item1, item2;
+    item[0] = 2;
+    item[1] = 5;
+    item1[0] = 4;
+    item1[1] = 10;
+    item2[0] = 6;
+    item2[1] = 15;
+    data.append(item);
+    data.append(item1);
+    data.append(item2);
+    return data;
+}
+
+int InOutOperator::getExpCountOfDay(QString day)
+{
+
+}
+
 QString InOutOperator::get(int row, int role) const
 {
     return model->record(row).value(role).toString();
@@ -166,6 +187,16 @@ bool InOutOperator::deleteRow(int row)
     }
     qDebug() << "Delete row error : " << model->lastError().text();
     return false;
+}
+
+QStringList InOutOperator::yearList()
+{
+    int earliestYear = QDate::fromString(getEarliestExpDate(), "yyyy-MM-dd").year();
+    int thisYear = QDate::currentDate().year();
+    for(int year = earliestYear; year <= thisYear; ++year) {
+        m_yearList.append(QString::number(year));
+    }
+    return m_yearList;
 }
 
 void InOutOperator::PackFilterFrame() {
