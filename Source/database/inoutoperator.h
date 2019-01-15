@@ -7,10 +7,14 @@
 #include "fileio.h"
 #include "commonhelper.h"
 #include <QVariantList>
+#include<QtCharts/QLineSeries>
+using namespace QtCharts;
 
 class InOutOperator : public QObject {
     Q_OBJECT
     Q_PROPERTY(QStringList  yearList READ yearList)
+    Q_PROPERTY(QLineSeries *lineYear READ lineYear WRITE set_lineYear NOTIFY lineYearChanged)
+    Q_PROPERTY(QLineSeries *lineMonth READ lineMonth WRITE set_lineMonth NOTIFY lineMonthChanged)
   public:
     explicit InOutOperator(QObject *parent = nullptr);
     Q_INVOKABLE bool in(QString barcode, QString name = nullptr,
@@ -25,11 +29,19 @@ class InOutOperator : public QObject {
     Q_INVOKABLE void updateOrderPhoto(QString barcode, QString url);
     Q_INVOKABLE QString getEarliestExpDate() const;
     Q_INVOKABLE int getExpCountFromDateRange(QString start, QString end);
-    Q_INVOKABLE QList<QMap<int, int>> getExpCountOfMonth(QString month);
-    Q_INVOKABLE int getExpCountOfDay(QString day);
+    Q_INVOKABLE int getExpCountOfMonth(QString year);
+    Q_INVOKABLE int getExpCountOfDay(QString year, QString month);
     Q_INVOKABLE QString get(int row, int role) const;
     Q_INVOKABLE bool deleteRow(int row);
     QStringList  yearList();
+    inline QLineSeries *lineYear() {
+        return m_lineYear;
+    }
+    void set_lineYear(QLineSeries *line);
+    inline QLineSeries *lineMonth() {
+        return m_lineMonth;
+    }
+    void set_lineMonth(QLineSeries *line);
     inline DbOperate *expDb() const {
         return db;
     }
@@ -43,8 +55,13 @@ class InOutOperator : public QObject {
     void PackFilterFrame();
     QList<QString> filters;
     QStringList  m_yearList;
+    QLineSeries *m_lineYear;
+    QLineSeries *m_lineMonth;
+    void CreateLines();
   signals:
     void updateDatabaseDone();
+    void lineYearChanged();
+    void lineMonthChanged();
   public slots:
 };
 

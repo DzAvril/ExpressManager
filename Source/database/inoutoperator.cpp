@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QPoint>
 
 InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     db = new DbOperate();
@@ -12,13 +13,15 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     fileIo = FileIo::getInstance();
     commonHelper = CommonHelper::getInstance();
     model = db->expTableModel();
-    filterString =
-        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now')");
+    model->setSort(db->OUTDATE, Qt::SortOrder::DescendingOrder);
+    filterString.clear();
     db->SetFilter(filterString);
     filterBarcode.clear();
     filterOutDate.clear();
     filterStartOutDate.clear();
     filterEndOutDate.clear();
+
+    CreateLines();
 }
 
 bool InOutOperator::in(QString barcode, QString name, QString phone) {
@@ -109,8 +112,7 @@ void InOutOperator::resetFilter() {
     filterOutDate.clear();
     filterStartOutDate.clear();
     filterEndOutDate.clear();
-    filterString =
-        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now')");
+    filterString.clear();
     db->SetFilter(filterString);
 }
 
@@ -151,36 +153,52 @@ int InOutOperator::getExpCountFromDateRange(QString start, QString end) {
     return count;
 }
 
-QList<QMap<int, int>> InOutOperator::getExpCountOfMonth(QString month)
-{
-    QList<QMap<int, int>> data;
-    QMap<int, int> item, item1, item2;
-    item[0] = 2;
-    item[1] = 5;
-    item1[0] = 4;
-    item1[1] = 10;
-    item2[0] = 6;
-    item2[1] = 15;
-    data.append(item);
-    data.append(item1);
-    data.append(item2);
-    return data;
+int InOutOperator::getExpCountOfMonth(QString year) {
+    QVector<QPointF> points;
+    int max = 0;
+    for (int mon = 0; mon <= 11; ++mon) {
+        QString startDate = QString("date('%1-01-01', '+%2 month')").arg(year, QString::number(mon));
+        QString endDate = QString("date('%1-01-01', '+%2 month', '+1 month', '-1 day')").arg(year, QString::number(mon));
+        QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) >= %1 and strftime('%Y-%m-%d', OutDate) <= %2").arg(
+                                 startDate, endDate);
+        db->SetFilter(tempFilter);
+        int count =  model->rowCount();
+        if (count > max) {
+            max = count;
+        }
+        points.append(QPointF(mon + 1, count));
+    }
+    m_lineYear->replace(points);
+    db->SetFilter(filterString);
+    return (max % 10 == 0) && (max != 0) ? max : ((max / 10) + 1) * 10;
 }
 
-int InOutOperator::getExpCountOfDay(QString day)
-{
-
+int InOutOperator::getExpCountOfDay(QString year, QString month) {
+    QVector<QPointF> points;
+    int max = 0; //max of axisY
+    int monthDiff = month.toInt() - 1;
+    for (int day = 0; day < 31; ++day) {
+        QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) = date('%1-01-01', '+%2 month', '+%3 day')").arg(year,
+                             QString::number(monthDiff), QString::number(day));
+        db->SetFilter(tempFilter);
+        int count =  model->rowCount();
+        if (count > max) {
+            max = count;
+        }
+        points.append(QPointF(day + 1, count));
+    }
+    m_lineMonth->replace(points);
+    db->SetFilter(filterString);
+    return (max % 10 == 0) && (max != 0) ? max : ((max / 10) + 1) * 10;
 }
 
-QString InOutOperator::get(int row, int role) const
-{
+QString InOutOperator::get(int row, int role) const {
     return model->record(row).value(role).toString();
 }
 
-bool InOutOperator::deleteRow(int row)
-{
-    if(model->removeRow(row)) {
-        if(model->submit()) {
+bool InOutOperator::deleteRow(int row) {
+    if (model->removeRow(row)) {
+        if (model->submit()) {
             emit updateDatabaseDone();
             return true;
         }
@@ -189,14 +207,37 @@ bool InOutOperator::deleteRow(int row)
     return false;
 }
 
-QStringList InOutOperator::yearList()
-{
+QStringList InOutOperator::yearList() {
     int earliestYear = QDate::fromString(getEarliestExpDate(), "yyyy-MM-dd").year();
     int thisYear = QDate::currentDate().year();
-    for(int year = earliestYear; year <= thisYear; ++year) {
+    for (int year = earliestYear; year <= thisYear; ++year) {
         m_yearList.append(QString::number(year));
     }
     return m_yearList;
+}
+
+void InOutOperator::set_lineYear(QLineSeries *line) {
+    if (m_lineYear == line) {
+        return;
+    }
+    if (m_lineYear)
+        if (m_lineYear->parent() == this) {
+            delete m_lineYear;
+        }
+    m_lineYear = line;
+    emit lineYearChanged();
+}
+
+void InOutOperator::set_lineMonth(QLineSeries *line) {
+    if (m_lineMonth == line) {
+        return;
+    }
+    if (m_lineMonth)
+        if (m_lineMonth->parent() == this) {
+            delete m_lineMonth;
+        }
+    m_lineMonth = line;
+    emit lineMonthChanged();
 }
 
 void InOutOperator::PackFilterFrame() {
@@ -221,4 +262,9 @@ void InOutOperator::PackFilterFrame() {
         }
     }
     qDebug() << "Filter string is " << filterString;
+}
+
+void InOutOperator::CreateLines() {
+    m_lineYear = new QLineSeries();
+    m_lineMonth = new QLineSeries();
 }

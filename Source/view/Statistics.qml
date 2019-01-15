@@ -15,8 +15,8 @@ Item {
         Item {
             id: total
             Layout.fillWidth: true
-            Layout.minimumHeight: 100
-            height: 100
+            Layout.minimumHeight: 80
+            height: 80
             z: 100
             Label{
                 id: from
@@ -73,7 +73,7 @@ Item {
             Label{
                 id: totalNumber
                 anchors.top: parent.top
-                anchors.topMargin: 20
+//                anchors.topMargin: 20
                 anchors.left: totallabel.right
                 anchors.leftMargin: 20
                 text: inOutOperator.getExpCountFromDateRange(startDate.dateValue, endDate.dateValue)
@@ -103,6 +103,11 @@ Item {
                     width: 100
                     model: inOutOperator.yearList
                     currentIndex: count - 1
+                    onCurrentIndexChanged : {
+                        if (currentIndex!=-1)
+                            year.axisY.max = inOutOperator.getExpCountOfMonth(inOutOperator.yearList[currentIndex]);
+                            month.axisY.max = inOutOperator.getExpCountOfDay(inOutOperator.yearList[yearCombo.currentIndex], monthCombo.model[monthCombo.currentIndex]);
+                    }
                   }
                 Label {
                     id: yearLbl
@@ -116,6 +121,7 @@ Item {
             }
             ChartView {
                 anchors.top: setYear.bottom
+                anchors.topMargin: -5
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
@@ -123,22 +129,25 @@ Item {
                 animationOptions: ChartView.SeriesAnimations
                 animationDuration: 1000
                 legend.visible: false
+                theme: ChartView.ChartThemeLight
 
                 LineSeries {
                     id: year
-//                    XYPoint { x: 1; y: 0 }
-//                    XYPoint { x: 2; y: 2.1 }
-//                    XYPoint { x: 3; y: 3.3 }
-//                    XYPoint { x: 4; y: 2.1 }
-//                    XYPoint { x: 5; y: 4.9 }
-//                    XYPoint { x: 6; y: 3.0 }
-//                    XYPoint { x: 7; y: 3.3 }
-//                    XYPoint { x: 8; y: 3.3 }
-//                    XYPoint { x: 9; y: 3.3 }
-//                    XYPoint { x: 10; y: 3.3 }
-//                    XYPoint { x: 11; y: 3.3 }
-//                    XYPoint { x: 12; y: 3.3 }
-
+                    axisX: ValueAxis {
+                        min: 1
+                        max: 12
+                        tickCount: 12
+                        tickInterval: 1
+                        labelFormat: "%d"
+                        titleText: "月"
+                    }
+                    axisY: ValueAxis {
+                        min: 0
+                        tickInterval: max / (tickCount - 1)
+                        tickCount: 6
+                        labelFormat: "%d"
+                        titleText: "发件数"
+                    }
                     onHovered: {
 
                     }
@@ -166,6 +175,10 @@ Item {
                     height: 25
                     width: 100
                     model: ["1", "2", "3","4", "5", "6","7", "8", "9","10", "11", "12"]
+                    currentIndex: ((new Date()).toLocaleString(Qt.locale(), "MM") * 1 - 1) //current month
+                    onCurrentIndexChanged: {
+                        month.axisY.max = inOutOperator.getExpCountOfDay(inOutOperator.yearList[yearCombo.currentIndex], monthCombo.model[monthCombo.currentIndex]);
+                    }
                   }
                 Label {
                     id: monthLbl
@@ -180,60 +193,37 @@ Item {
             ChartView {
                 id: monthChartView
                 anchors.top: setMonth.bottom
+                anchors.topMargin: -5
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 antialiasing: true
                 animationOptions: ChartView.SeriesAnimations
                 animationDuration: 1000
-
+                theme: ChartView.ChartThemeLight
                 legend.visible: false
 
                 LineSeries {
+                    id: month
+//                    pointLabelsVisible: true
+//                    pointsVisible: true
                     axisX: ValueAxis {
-//                        min: 1
-//                        max: 30
-
-//                        tickAnchor: 1
-//                        tickType : ValueAxis.TicksDynamic
+                        min: 1
+                        max: 31
+                        tickCount: 31
+                        tickInterval: 1
+                        labelFormat: "%d"
+                        titleText: "日"
                     }
                     axisY: ValueAxis {
-//                        min: 0
-//                        max: 5
+                        min: 0
+                        tickInterval: max / (tickCount - 1)
+                        tickCount: 6
+                        labelFormat: "%d"
+                        titleText: "发件数"
                     }
-                    XYPoint { x: 1; y: 0 }
-                    XYPoint { x: 2; y: 2.1 }
-                    XYPoint { x: 3; y: 3.3 }
-                    XYPoint { x: 4; y: 2.1 }
-                    XYPoint { x: 5; y: 4.9 }
-                    XYPoint { x: 6; y: 3.0 }
-                    XYPoint { x: 7; y: 3.3 }
-                    XYPoint { x: 8; y: 3.3 }
-                    XYPoint { x: 9; y: 3.3 }
-                    XYPoint { x: 10; y: 3.3 }
-                    XYPoint { x: 11; y: 3.3 }
-                    XYPoint { x: 12; y: 3.3 }
-                    XYPoint { x: 13; y: 0 }
-                    XYPoint { x: 14; y: 2.1 }
-                    XYPoint { x: 15; y: 3.3 }
-                    XYPoint { x: 16; y: 2.1 }
-                    XYPoint { x: 17; y: 4.9 }
-                    XYPoint { x: 18; y: 3.0 }
-                    XYPoint { x: 19; y: 3.3 }
-                    XYPoint { x: 20; y: 3.3 }
-                    XYPoint { x: 21; y: 3.3 }
-                    XYPoint { x: 22; y: 3.3 }
-                    XYPoint { x: 23; y: 3.3 }
-                    XYPoint { x: 24; y: 3.3 }
-                    XYPoint { x: 25; y: 3.3 }
-                    XYPoint { x: 26; y: 3.3 }
-                    XYPoint { x: 27; y: 3.3 }
-                    XYPoint { x: 28; y: 3.3 }
-                    XYPoint { x: 29; y: 3.3 }
-                    XYPoint { x: 30; y: 3.3 }
-
                     onPressed: {
-//                        console.log("onPressed: " + point.x + ", " + point.y)
+                        console.log(point.x, point.y)
                     }
                 }
             }
@@ -243,11 +233,15 @@ Item {
         target: inOutOperator
         onUpdateDatabaseDone: {
             totalNumber.text = inOutOperator.getExpCountFromDateRange(startDate.dateValue, endDate.dateValue)
+            year.axisY.max = inOutOperator.getExpCountOfMonth(inOutOperator.yearList[yearCombo.currentIndex]);
+            month.axisY.max = inOutOperator.getExpCountOfDay(inOutOperator.yearList[yearCombo.currentIndex], monthCombo.model[monthCombo.currentIndex]);
         }
     }
     Component.onCompleted: {
-        console.log("Statistics completed");
-        console.log(inOutOperator.getExpCountOfMonth(1))
+        inOutOperator.lineYear = year;
+        inOutOperator.lineMonth = month;
+        year.axisY.max = inOutOperator.getExpCountOfMonth(inOutOperator.yearList[yearCombo.currentIndex]);
+        month.axisY.max = inOutOperator.getExpCountOfDay(inOutOperator.yearList[yearCombo.currentIndex], monthCombo.model[monthCombo.currentIndex]);
     }
 }
 

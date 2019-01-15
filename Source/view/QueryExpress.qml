@@ -106,13 +106,23 @@ Item {
                 MenuItem {
                     text:  qsTr("删除")
                     onClicked: {
-                        console.log(tableView.currentRow)
-                        console.log(inOutOperator.get(tableView.currentRow, 0))
-                        if(inOutOperator.deleteRow(tableView.currentRow)) {
-                            tableView.selection.clear()
-                        }
+                        deleteMsgDig.open()
                     }
                 }
+            }
+            MessageDialog {
+                id: deleteMsgDig
+                title: "删除？"
+                icon: StandardIcon.Warning
+                text: "删除将丢失该快递的出库记录，是否执行？"
+                standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+                onAccepted: {
+                    if(inOutOperator.deleteRow(tableView.currentRow)) {
+                        tableView.selection.clear()
+                    }
+                }
+                onRejected: deleteMsgDig.close()
             }
 
             rowDelegate: Rectangle {

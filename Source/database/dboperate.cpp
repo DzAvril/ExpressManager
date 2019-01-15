@@ -26,7 +26,6 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
     }
     m_expTableModel = new SqlTableModel(this, db);
     m_expTableModel->setTable("record");
-    m_expTableModel->setSort(OUTDATE, Qt::SortOrder::DescendingOrder);
     RefreshModel();
 }
 

@@ -2,6 +2,7 @@ QT += quick
 CONFIG += c++11
 QT += sql
 QT += charts
+QT += opengl
 CONFIG+=release
 QT += texttospeech
 QT += multimedia
