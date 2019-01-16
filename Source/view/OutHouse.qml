@@ -206,11 +206,11 @@ Item {
 
             VideoOutput {
                 id : barcodeVideoOut
-                width: parent.width * 2 / 3
+                width: parent.width * 4 / 5
                 height: width * 3 / 4
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: barcodeCameraId.bottom
-                anchors.topMargin: 10
+                anchors.topMargin: 30
                 source: barcodeCamera
                 focus : visible // to receive focus and capture key events when visible
                 filters: [zxingFilter]
@@ -236,107 +236,112 @@ Item {
                 }
             }
 
-            Text {
-                id: barcodeLable
-                text: qsTr("快递单号:")
+            Item {
+                id: infoGroup
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: barcodeVideoOut.bottom
                 anchors.topMargin: 30
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                font.family: "Arial"
-                font.pointSize: 13
-            }
+                width: barcodeLable.width + barcode.width +button.width
+                Text {
+                    id: barcodeLable
+                    text: qsTr("快递单号:")
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    font.family: "Arial"
+                    font.pointSize: 13
+                }
 
-            TextField {
-                id: barcode
-                width: 132
-                height: 27
-                text: qsTr("")
-                anchors.left: barcodeLable.right
-                anchors.leftMargin: 5
-                anchors.verticalCenter: barcodeLable.verticalCenter
-                font.family: "Arial"
-                cursorVisible: true
-                font.pixelSize: 12
-                focus: true
-            }
+                TextField {
+                    id: barcode
+                    width: 132
+                    height: 27
+                    text: qsTr("")
+                    anchors.left: barcodeLable.right
+                    anchors.leftMargin: 5
+                    anchors.verticalCenter: barcodeLable.verticalCenter
+                    font.family: "Arial"
+                    cursorVisible: true
+                    font.pixelSize: 12
+                    focus: true
+                }
 
-            Text {
-                id: nameLable
-                text: qsTr("姓       名:")
-                anchors.top: barcodeLable.top
-                anchors.topMargin: 30
-                anchors.left: barcodeLable.left
-                font.family: "Arial"
-                font.pointSize: 13
-                visible: false
-            }
-
-            TextInput {
-                id: name
-                width: 132
-                height: nameLable.height
-                text: qsTr("")
-                anchors.left: nameLable.right
-                anchors.leftMargin: 5
-                anchors.top: nameLable.top
-                font.family: "Times New Roman"
-                selectionColor: "#c3c3e6"
-                autoScroll: false
-                font.pixelSize: 12
-                focus: true
-                renderType: TextInput.NativeRendering
-                visible: false
-            }
-            Text {
-                id: phoneLable
-                text: qsTr("电       话:")
-                anchors.top: nameLable.top
-                anchors.topMargin: 30
-                anchors.left: nameLable.left
-                font.family: "Arial"
-                font.pointSize: 13
-                visible: false
-            }
-
-            TextInput {
-                id: phone
-                width: 132
-                height: 35
-                text: qsTr("")
-                renderType: Text.NativeRendering
-                anchors.left: phoneLable.right
-                anchors.leftMargin: 5
-                anchors.verticalCenter: phoneLable.verticalCenter
-                anchors.top: phoneLable.top
-                font.family: "Times New Roman"
-                selectionColor: "#c3c3e6"
-                autoScroll: false
-                font.pixelSize: 15
-                focus: true
-                visible: false
-            }
-
-            QC.Button {
-                id: button
-                width: 80
-                height: 30
-                text: qsTr("出库")
-                anchors.top: phone.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin:  30
-                onClicked: {
-                    if(barcode.text === "") {
-                        speech.say("快递单号不能为空")
-                    } else {
-                        if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
-                            captureImage("/" + barcode.text + ".jpg");
+                QC.Button {
+                    id: button
+                    width: 80
+                    height: 30
+                    text: qsTr("出库")
+                    anchors.verticalCenter: barcodeLable.verticalCenter
+                    anchors.left: barcode.right
+                    anchors.leftMargin: 10
+                    onClicked: {
+                        if(barcode.text === "") {
+                            speech.say("快递单号不能为空")
                         } else {
-                            barcode.text = ""
-                            name.text = ""
-                            phone.text = ""
+                            if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
+                                captureImage("/" + barcode.text + ".jpg");
+                            } else {
+                                barcode.text = ""
+                                name.text = ""
+                                phone.text = ""
+                            }
                         }
                     }
+                }
+
+                Text {
+                    id: nameLable
+                    text: qsTr("姓       名:")
+                    anchors.top: barcodeLable.top
+                    anchors.topMargin: 30
+                    anchors.left: barcodeLable.left
+                    font.family: "Arial"
+                    font.pointSize: 13
+                    visible: false
+                }
+
+                TextInput {
+                    id: name
+                    width: 132
+                    height: nameLable.height
+                    text: qsTr("")
+                    anchors.left: nameLable.right
+                    anchors.leftMargin: 5
+                    anchors.top: nameLable.top
+                    font.family: "Times New Roman"
+                    selectionColor: "#c3c3e6"
+                    autoScroll: false
+                    font.pixelSize: 12
+                    focus: true
+                    renderType: TextInput.NativeRendering
+                    visible: false
+                }
+                Text {
+                    id: phoneLable
+                    text: qsTr("电       话:")
+                    anchors.top: nameLable.top
+                    anchors.topMargin: 30
+                    anchors.left: nameLable.left
+                    font.family: "Arial"
+                    font.pointSize: 13
+                    visible: false
+                }
+
+                TextInput {
+                    id: phone
+                    width: 132
+                    height: 35
+                    text: qsTr("")
+                    renderType: Text.NativeRendering
+                    anchors.left: phoneLable.right
+                    anchors.leftMargin: 5
+                    anchors.verticalCenter: phoneLable.verticalCenter
+                    anchors.top: phoneLable.top
+                    font.family: "Times New Roman"
+                    selectionColor: "#c3c3e6"
+                    autoScroll: false
+                    font.pixelSize: 15
+                    focus: true
+                    visible: false
                 }
             }
 
@@ -427,11 +432,11 @@ Item {
 
             VideoOutput {
                 id : videoOut
-                width: parent.width * 2 / 3
+                width: parent.width * 4 / 5
                 height: width * 3 / 4
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: cameraIds.bottom
-                anchors.topMargin: 10
+                anchors.topMargin: 30
                 source: camera
                 focus : visible // to receive focus and capture key events when visible
                 filters: [faceDetectFilter]
