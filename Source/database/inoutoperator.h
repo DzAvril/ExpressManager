@@ -12,9 +12,10 @@ using namespace QtCharts;
 
 class InOutOperator : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QStringList  yearList READ yearList)
+    Q_PROPERTY(QStringList  yearList READ yearList NOTIFY yearListChanged)
     Q_PROPERTY(QLineSeries *lineYear READ lineYear WRITE set_lineYear NOTIFY lineYearChanged)
     Q_PROPERTY(QLineSeries *lineMonth READ lineMonth WRITE set_lineMonth NOTIFY lineMonthChanged)
+    Q_PROPERTY(QString earliestYear READ earliestYear NOTIFY earliestYearChanged)
   public:
     explicit InOutOperator(QObject *parent = nullptr);
     Q_INVOKABLE bool in(QString barcode, QString name = nullptr,
@@ -27,7 +28,6 @@ class InOutOperator : public QObject {
     Q_INVOKABLE void setEndOutDateFilter(QString endOutDate);
     Q_INVOKABLE void resetFilter();
     Q_INVOKABLE void updateOrderPhoto(QString barcode, QString url);
-    Q_INVOKABLE QString getEarliestExpDate() const;
     Q_INVOKABLE int getExpCountFromDateRange(QString start, QString end);
     Q_INVOKABLE int getExpCountOfMonth(QString year);
     Q_INVOKABLE int getExpCountOfDay(QString year, QString month);
@@ -45,6 +45,9 @@ class InOutOperator : public QObject {
     inline DbOperate *expDb() const {
         return db;
     }
+    inline QString earliestYear() const {
+        return m_earliestYear;
+    }
   private:
     DbOperate *db;
     SqlTableModel *model;
@@ -57,11 +60,15 @@ class InOutOperator : public QObject {
     QStringList  m_yearList;
     QLineSeries *m_lineYear;
     QLineSeries *m_lineMonth;
+    QString m_earliestYear;
+    void GetEarliestExpDate();
     void CreateLines();
   signals:
     void updateDatabaseDone();
     void lineYearChanged();
     void lineMonthChanged();
+    void yearListChanged();
+    void earliestYearChanged();
   public slots:
 };
 

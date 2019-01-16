@@ -35,7 +35,7 @@ Item {
                 anchors.leftMargin: 10
                 anchors.verticalCenter: from.verticalCenter
                 calendarWidth: 100
-                dateValue: inOutOperator.getEarliestExpDate() ? inOutOperator.getEarliestExpDate()
+                dateValue: inOutOperator.earliestYear ? inOutOperator.earliestYear
                                                               : (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
                 onDateValueChanged: {
                 }
@@ -133,6 +133,7 @@ Item {
 
                 LineSeries {
                     id: year
+                    pointsVisible: true
                     axisX: ValueAxis {
                         min: 1
                         max: 12
@@ -206,7 +207,7 @@ Item {
                 LineSeries {
                     id: month
 //                    pointLabelsVisible: true
-//                    pointsVisible: true
+                    pointsVisible: true
                     axisX: ValueAxis {
                         min: 1
                         max: 31

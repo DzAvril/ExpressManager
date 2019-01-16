@@ -20,12 +20,12 @@ QVariant SqlTableModel::data(const QModelIndex &idx, int role) const {
 QHash<int, QByteArray> SqlTableModel::roleNames() const {
     QHash<int, QByteArray> roles;
     const int ncols = columnCount();
-    qDebug() << "Column numbers is " << ncols;
+//    qDebug() << "Column numbers is " << ncols;
     for (int ix = 0; ix < ncols; ++ix) {
         roles.insert(Qt::UserRole + ix + 1,
                      QVariant(headerData(ix, Qt::Horizontal).toString())
                      .toByteArray());
-        qDebug() << "roles: " << QVariant(headerData(ix, Qt::Horizontal).toString());
+//        qDebug() << "roles: " << QVariant(headerData(ix, Qt::Horizontal).toString());
     }
     return roles;
 }

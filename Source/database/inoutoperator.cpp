@@ -13,14 +13,14 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     fileIo = FileIo::getInstance();
     commonHelper = CommonHelper::getInstance();
     model = db->expTableModel();
-    model->setSort(db->OUTDATE, Qt::SortOrder::DescendingOrder);
-    filterString.clear();
+    filterString =
+        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now')");
     db->SetFilter(filterString);
     filterBarcode.clear();
     filterOutDate.clear();
     filterStartOutDate.clear();
     filterEndOutDate.clear();
-
+    GetEarliestExpDate();
     CreateLines();
 }
 
@@ -112,7 +112,8 @@ void InOutOperator::resetFilter() {
     filterOutDate.clear();
     filterStartOutDate.clear();
     filterEndOutDate.clear();
-    filterString.clear();
+    filterString =
+        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now')");
     db->SetFilter(filterString);
 }
 
@@ -133,14 +134,20 @@ void InOutOperator::updateOrderPhoto(QString barcode, QString photoUrl) {
     return;
 }
 
-QString InOutOperator::getEarliestExpDate() const {
-
+void InOutOperator::GetEarliestExpDate() {
+    QString tempFilter = "";
+    db->SetFilter(tempFilter);
+    while (model->canFetchMore()) {
+        model->fetchMore();
+    }
     int counts = model->rowCount();
     if (counts != 0) {
         QString s = get(counts - 1, db->OUTDATE);
-        return s.mid(0, 10); // 2019-01-01
+        db->SetFilter(filterString);
+        m_earliestYear = s.mid(0, 10); // 2019-01-01
     } else {
-        return nullptr;
+        db->SetFilter(filterString);
+        m_earliestYear = nullptr;
     }
 }
 
@@ -148,6 +155,9 @@ int InOutOperator::getExpCountFromDateRange(QString start, QString end) {
     QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) >= '%1' and strftime('%Y-%m-%d', OutDate) <= '%2' ").arg(
                              start, end);
     db->SetFilter(tempFilter);
+    while (model->canFetchMore()) {
+        model->fetchMore();
+    }
     int count =  model->rowCount();
     db->SetFilter(filterString);
     return count;
@@ -162,6 +172,9 @@ int InOutOperator::getExpCountOfMonth(QString year) {
         QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) >= %1 and strftime('%Y-%m-%d', OutDate) <= %2").arg(
                                  startDate, endDate);
         db->SetFilter(tempFilter);
+        while (model->canFetchMore()) {
+            model->fetchMore();
+        }
         int count =  model->rowCount();
         if (count > max) {
             max = count;
@@ -181,6 +194,9 @@ int InOutOperator::getExpCountOfDay(QString year, QString month) {
         QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) = date('%1-01-01', '+%2 month', '+%3 day')").arg(year,
                              QString::number(monthDiff), QString::number(day));
         db->SetFilter(tempFilter);
+        while (model->canFetchMore()) {
+            model->fetchMore();
+        }
         int count =  model->rowCount();
         if (count > max) {
             max = count;
@@ -210,10 +226,10 @@ bool InOutOperator::deleteRow(int row) {
 QStringList InOutOperator::yearList() {
     m_yearList.clear();
     int earliestYear;
-    if(getEarliestExpDate() == nullptr) {
+    if(m_earliestYear == nullptr) {
         earliestYear = 2019;
     } else {
-        earliestYear = QDate::fromString(getEarliestExpDate(), "yyyy-MM-dd").year();
+        earliestYear = QDate::fromString(m_earliestYear, "yyyy-MM-dd").year();
     }
     int thisYear = QDate::currentDate().year();
     for (int year = earliestYear; year <= thisYear; ++year) {
