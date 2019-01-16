@@ -345,12 +345,12 @@ Item {
             width: 60
             text: "重置"
             onClicked: {
-                inOutOperator.resetFilter();
                 tableView.selection.clear();
                 barcodeFilter.text = "";
                 outDateFilter.dateValue = ""
                 startOutDateFilter.dateValue = ""
                 endOutDateFilter.dateValue = ""
+                inOutOperator.resetFilter();
             }
         }
     }

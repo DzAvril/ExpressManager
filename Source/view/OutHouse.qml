@@ -131,7 +131,8 @@ Item {
             height: parent.height
             width : parent.width / 2
             anchors.left: parent.left
-            Layout.minimumWidth: 320
+            anchors.right: parent.horizontalCenter
+            Layout.minimumWidth: 400
             Text {
                 id: getExpressNo
                 text: qsTr("单号采集")
@@ -155,7 +156,7 @@ Item {
             ComboBox {
                 id : barcodeCameraId
                 height: 25
-                width: 200
+                width: 220
                 anchors.verticalCenter: barcodeSourceLable.verticalCenter
                 anchors.left: barcodeSourceLable.right
                 anchors.leftMargin: 5
@@ -206,7 +207,7 @@ Item {
 
             VideoOutput {
                 id : barcodeVideoOut
-                width: parent.width * 4 / 5
+                width: parent.width * 9 / 10
                 height: width * 3 / 4
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: barcodeCameraId.bottom
@@ -248,28 +249,29 @@ Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     font.family: "Arial"
-                    font.pointSize: 13
+                    font.pointSize: 20
                 }
 
                 TextField {
                     id: barcode
-                    width: 132
-                    height: 27
+                    width: 175
+                    height: barcodeLable.height
                     text: qsTr("")
                     anchors.left: barcodeLable.right
                     anchors.leftMargin: 5
                     anchors.verticalCenter: barcodeLable.verticalCenter
                     font.family: "Arial"
                     cursorVisible: true
-                    font.pixelSize: 12
+                    font.pixelSize: 20
                     focus: true
                 }
 
                 QC.Button {
                     id: button
                     width: 80
-                    height: 30
+                    height: barcodeLable.height
                     text: qsTr("出库")
+
                     anchors.verticalCenter: barcodeLable.verticalCenter
                     anchors.left: barcode.right
                     anchors.leftMargin: 10
@@ -351,8 +353,9 @@ Item {
             id : captureImgView
             height: parent.height
             anchors.right: parent.right
+            anchors.left: parent.horizontalCenter
             width :  parent.width / 2
-            Layout.minimumWidth: 320
+            Layout.minimumWidth: 400
             Text {
                 id: faceDetect
                 text: qsTr("人像采集")
@@ -376,7 +379,7 @@ Item {
             ComboBox {
                 id : cameraIds
                 height: 25
-                width: 200
+                width: 220
                 anchors.verticalCenter: sourceLable.verticalCenter
                 anchors.left: sourceLable.right
                 anchors.leftMargin: 5
@@ -432,7 +435,7 @@ Item {
 
             VideoOutput {
                 id : videoOut
-                width: parent.width * 4 / 5
+                width: parent.width * 9 / 10
                 height: width * 3 / 4
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: cameraIds.bottom
@@ -481,6 +484,8 @@ Item {
         }
     }
 }
+
+
 
 
 
