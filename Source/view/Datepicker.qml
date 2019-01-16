@@ -6,7 +6,13 @@ TextField
     id: textField
     property string dateValue
     property alias calendarWidth:  textField.width
-    readOnly: true
+    property alias calendarVisable: calendar.visible
+//    readOnly: true
+    Keys.onEnterPressed: {
+        dateValue = textField.text
+    }
+    signal calendarVisiableChanged()
+
     Calendar{
         id: calendar
         anchors.topMargin: 0
@@ -18,6 +24,9 @@ TextField
             text = text.substr(0, 10);
             dateValue = text;
             visible = false;
+        }
+        onVisibleChanged: {
+            calendarVisiableChanged(calendar.visible)
         }
     }
 

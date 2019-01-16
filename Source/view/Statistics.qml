@@ -8,6 +8,16 @@ Item {
     property alias statisticsHeight: statistics.height
     property alias statisticsWidth: statistics.width
 
+    MouseArea {
+        id: closeCalendar
+        anchors.fill: parent
+        enabled: false
+        onClicked: {
+            startDate.calendarVisable = false;
+            endDate.calendarVisable = false;
+        }
+    }
+
     QC.SplitView{
         id: splitView
         anchors.fill: parent
@@ -39,6 +49,13 @@ Item {
                                                               : (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
                 onDateValueChanged: {
                 }
+                onCalendarVisiableChanged: {
+                    if(calendarVisable) {
+                        closeCalendar.enabled = true;
+                    } else {
+                        closeCalendar.enabled = false;
+                    }
+                }
             }
             Label{
                 id: to
@@ -59,6 +76,13 @@ Item {
                 calendarWidth: 100
                 dateValue: (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
                 onDateValueChanged: {
+                }
+                onCalendarVisiableChanged: {
+                    if(calendarVisable) {
+                        closeCalendar.enabled = true;
+                    } else {
+                        closeCalendar.enabled = false;
+                    }
                 }
             }
             Label{

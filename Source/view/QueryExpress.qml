@@ -238,6 +238,16 @@ Item {
             font.pointSize: 10
             font.family: "Arial"
         }
+        MouseArea {
+            id: closeCalendar
+            anchors.fill: parent
+            enabled: false
+            onClicked: {
+                outDateFilter.calendarVisable = false;
+                startOutDateFilter.calendarVisable = false;
+                endOutDateFilter.calendarVisable = false;
+            }
+        }
 
         Datepicker {
             id: outDateFilter
@@ -251,6 +261,13 @@ Item {
                 if(dateValue !== "") {
                     startOutDateFilter.dateValue = ""
                     endOutDateFilter.dateValue = ""
+                }
+            }
+            onCalendarVisiableChanged: {
+                if(calendarVisable) {
+                    closeCalendar.enabled = true;
+                } else {
+                    closeCalendar.enabled = false;
                 }
             }
         }
@@ -278,6 +295,13 @@ Item {
                     outDateFilter.dateValue = ""
                 }
             }
+            onCalendarVisiableChanged: {
+                if(calendarVisable) {
+                    closeCalendar.enabled = true;
+                } else {
+                    closeCalendar.enabled = false;
+                }
+            }
         }
 
         Label {
@@ -301,6 +325,13 @@ Item {
                 tableView.selection.clear()
                 if(dateValue !== ""){
                     outDateFilter.dateValue = ""
+                }
+            }
+            onCalendarVisiableChanged: {
+                if(calendarVisable) {
+                    closeCalendar.enabled = true;
+                } else {
+                    closeCalendar.enabled = false;
                 }
             }
         }
