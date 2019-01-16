@@ -158,6 +158,10 @@ Item {
                 LineSeries {
                     id: year
                     pointsVisible: true
+                    pointLabelsVisible: false
+                    pointLabelsFormat: "@yPoint"
+                    pointLabelsClipping: false
+                    pointLabelsColor: "blue"
                     axisX: ValueAxis {
                         min: 1
                         max: 12
@@ -174,8 +178,8 @@ Item {
                         titleText: "发件数"
                     }
                     onHovered: {
-
-                    }
+                        pointLabelsVisible = !pointLabelsVisible;
+                    }                    
                 }
             }
         }
@@ -230,8 +234,12 @@ Item {
 
                 LineSeries {
                     id: month
-//                    pointLabelsVisible: true
                     pointsVisible: true
+                    pointLabelsVisible: false
+                    pointLabelsFormat: "@yPoint"
+                    pointLabelsClipping: false
+                    pointLabelsColor: "blue"
+
                     axisX: ValueAxis {
                         min: 1
                         max: 31
@@ -247,8 +255,8 @@ Item {
                         labelFormat: "%d"
                         titleText: "发件数"
                     }
-                    onPressed: {
-                        console.log(point.x, point.y)
+                    onHovered: {
+                        pointLabelsVisible = !pointLabelsVisible;
                     }
                 }
             }
