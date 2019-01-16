@@ -208,7 +208,13 @@ bool InOutOperator::deleteRow(int row) {
 }
 
 QStringList InOutOperator::yearList() {
-    int earliestYear = QDate::fromString(getEarliestExpDate(), "yyyy-MM-dd").year();
+    m_yearList.clear();
+    int earliestYear;
+    if(getEarliestExpDate() == nullptr) {
+        earliestYear = 2019;
+    } else {
+        earliestYear = QDate::fromString(getEarliestExpDate(), "yyyy-MM-dd").year();
+    }
     int thisYear = QDate::currentDate().year();
     for (int year = earliestYear; year <= thisYear; ++year) {
         m_yearList.append(QString::number(year));
