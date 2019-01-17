@@ -213,9 +213,13 @@ int InOutOperator::getExpCountOfDay(QString year, QString month) {
 }
 
 bool InOutOperator::deleteRow(int row) {
+    QString expOrderPhotoUrl = recordModel->record(row).value(db->EXPORDERPHOTOURL).toString();
+    QString clientPhotoUrl = recordModel->record(row).value(db->CLIENTPHOTURL).toString();
     if (recordModel->removeRow(row)) {
         if (recordModel->submit()) {
             emit updateDatabaseDone();
+            fileIo->DeleteFile(expOrderPhotoUrl);
+            fileIo->DeleteFile(clientPhotoUrl);
             return true;
         }
     }
