@@ -17,17 +17,44 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
     }
     if (OpenDB(path + DB_NAME)) {
         qDebug("Open database successed.");
-        if (!IsRecordTableExist()) {
+        if (!IsTableExist("record")) {
             qDebug("Table record is not exist, creat now.");
             CreateRecordTable();
         } else {
             qDebug("Table record is exist.");
         }
+        if (!IsTableExist("year")) {
+            qDebug("Table year is not exist, creat now.");
+            CreateYearTable();
+        } else {
+            qDebug("Table year is exist.");
+        }
+        if (!IsTableExist("month")) {
+            qDebug("Table month is not exist, creat now.");
+            CreateMonthTable();
+        } else {
+            qDebug("Table month is exist.");
+        }
+        if (!IsTableExist("day")) {
+            qDebug("Table day is not exist, creat now.");
+            CreateDayTable();
+        } else {
+            qDebug("Table day is exist.");
+        }
+        m_recordModel = new SqlTableModel(this, db);
+        m_recordModel->setTable("record");
+        m_recordModel->setSort(OUTDATE, Qt::SortOrder::DescendingOrder);
+        m_yearModel = new SqlTableModel(this, db);
+        m_yearModel->setTable("year");
+        m_yearModel->setSort(0, Qt::SortOrder::DescendingOrder);
+        m_monthModel = new SqlTableModel(this, db);
+        m_monthModel->setTable("month");
+        m_monthModel->setSort(0, Qt::SortOrder::DescendingOrder);
+        m_dayModel = new SqlTableModel(this, db);
+        m_dayModel->setTable("day");
+        m_dayModel->setSort(0, Qt::SortOrder::DescendingOrder);
+        RefreshModel();
     }
-    m_expTableModel = new SqlTableModel(this, db);
-    m_expTableModel->setTable("record");
-    m_expTableModel->setSort(OUTDATE, Qt::SortOrder::DescendingOrder);     
-    RefreshModel();
 }
 
 bool DbOperate::OpenDB(const QString &path) {
@@ -43,11 +70,10 @@ bool DbOperate::OpenDB(const QString &path) {
     return true;
 }
 
-bool DbOperate::IsRecordTableExist() {
+bool DbOperate::IsTableExist(QString tableName) {
     QSqlQuery query(db);
     int tempIdx = 0;
-    query.exec("select count(*)  from sqlite_master where type='table' and name = 'record'")
-    ;
+    query.exec(QString("select count(*)  from sqlite_master where type='table' and name = '%1'").arg(tableName));
 
     if (query.next()) {
         tempIdx =  query.value(0).toInt();
@@ -69,13 +95,55 @@ bool DbOperate::CreateRecordTable() {
                "ClientPhotoUrl char(100))");
 
     if (!query.isActive()) {
-        qDebug() << "Create Database Error" << db.lastError().text();
+        qDebug() << "Create table record Error" << db.lastError().text();
         return false;
     }
     return true;
 }
 
-bool DbOperate::InsertItem(const QString &barcode, QString &name, QString &phone) {
+bool DbOperate::CreateYearTable()
+{
+    QSqlQuery query(db);
+    query.exec("CREATE TABLE year ("
+               "Year TEXT PRIMARY KEY, "
+               "Count int NOT NULL)");
+
+    if (!query.isActive()) {
+        qDebug() << "Create table year Error" << db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DbOperate::CreateMonthTable()
+{
+    QSqlQuery query(db);
+    query.exec("CREATE TABLE month ("
+               "Month TEXT PRIMARY KEY, "
+               "Count int NOT NULL)");
+
+    if (!query.isActive()) {
+        qDebug() << "Create table month Error" << db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DbOperate::CreateDayTable()
+{
+    QSqlQuery query(db);
+    query.exec("CREATE TABLE day ("
+               "Day TEXT PRIMARY KEY, "
+               "Count int NOT NULL)");
+
+    if (!query.isActive()) {
+        qDebug() << "Create table day Error" << db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DbOperate::InsertRecord(const QString &barcode, QString &name, QString &phone) {
     qDebug() << "Start insert item " << barcode << "to db.";
     QSqlQuery query(db);
 
@@ -186,15 +254,24 @@ int DbOperate::GetItemsCount() {
 }
 
 void DbOperate::RefreshModel() {
-    if (m_expTableModel) {
-        m_expTableModel->select();
+    if (m_recordModel) {
+        m_recordModel->select();
+    }
+    if (m_yearModel) {
+        m_yearModel->select();
+    }
+    if (m_monthModel) {
+        m_monthModel->select();
+    }
+    if (m_dayModel) {
+        m_dayModel->select();
     }
 }
 
 void DbOperate::SetFilter(QString &filterStr) {
-    if (m_expTableModel) {
-        m_expTableModel->setFilter(filterStr);
-        m_expTableModel->select();
+    if (m_recordModel) {
+        m_recordModel->setFilter(filterStr);
+        m_recordModel->select();
     }
 }
 

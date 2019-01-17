@@ -50,7 +50,10 @@ class InOutOperator : public QObject {
     }
   private:
     DbOperate *db;
-    SqlTableModel *model;
+    SqlTableModel *recordModel;
+    SqlTableModel *yearModel;
+    SqlTableModel *monthModel;
+    SqlTableModel *dayModel;
     Speech *speech;
     FileIo *fileIo;
     CommonHelper *commonHelper;
@@ -63,6 +66,7 @@ class InOutOperator : public QObject {
     QString m_earliestYear;
     void GetEarliestExpDate();
     void CreateLines();
+    void AddCount();
   signals:
     void updateDatabaseDone();
     void lineYearChanged();

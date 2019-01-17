@@ -12,7 +12,11 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     speech = Speech::getInstance();
     fileIo = FileIo::getInstance();
     commonHelper = CommonHelper::getInstance();
-    model = db->expTableModel();
+    recordModel = db->GetRecordModel();
+    yearModel = db->GetYearModel();
+    monthModel = db->GetMonthModel();
+    dayModel = db->GetDayModel();
+
     filterString =
         QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now')");
     db->SetFilter(filterString);
@@ -30,7 +34,7 @@ bool InOutOperator::in(QString barcode, QString name, QString phone) {
         // speech->say(ITEM_EXIST);
         return true;
     }
-    if (!db->InsertItem(barcode, name, phone)) {
+    if (!db->InsertRecord(barcode, name, phone)) {
         // speech->say(IN_ERROR);
         return false;
     }
@@ -55,6 +59,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
         return false;
     }
     speech->say(OUT_SUCCESS);
+    AddCount();
     emit updateDatabaseDone();
     return true;
 }
@@ -137,10 +142,10 @@ void InOutOperator::updateOrderPhoto(QString barcode, QString photoUrl) {
 void InOutOperator::GetEarliestExpDate() {
     QString tempFilter = "";
     db->SetFilter(tempFilter);
-    while (model->canFetchMore()) {
-        model->fetchMore();
+    while (recordModel->canFetchMore()) {
+        recordModel->fetchMore();
     }
-    int counts = model->rowCount();
+    int counts = recordModel->rowCount();
     if (counts != 0) {
         QString s = get(counts - 1, db->OUTDATE);
         db->SetFilter(filterString);
@@ -155,10 +160,10 @@ int InOutOperator::getExpCountFromDateRange(QString start, QString end) {
     QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) >= '%1' and strftime('%Y-%m-%d', OutDate) <= '%2' ").arg(
                              start, end);
     db->SetFilter(tempFilter);
-    while (model->canFetchMore()) {
-        model->fetchMore();
+    while (recordModel->canFetchMore()) {
+        recordModel->fetchMore();
     }
-    int count =  model->rowCount();
+    int count =  recordModel->rowCount();
     db->SetFilter(filterString);
     return count;
 }
@@ -172,10 +177,10 @@ int InOutOperator::getExpCountOfMonth(QString year) {
         QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) >= %1 and strftime('%Y-%m-%d', OutDate) <= %2").arg(
                                  startDate, endDate);
         db->SetFilter(tempFilter);
-        while (model->canFetchMore()) {
-            model->fetchMore();
+        while (recordModel->canFetchMore()) {
+            recordModel->fetchMore();
         }
-        int count =  model->rowCount();
+        int count =  recordModel->rowCount();
         if (count > max) {
             max = count;
         }
@@ -194,10 +199,10 @@ int InOutOperator::getExpCountOfDay(QString year, QString month) {
         QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) = date('%1-01-01', '+%2 month', '+%3 day')").arg(year,
                              QString::number(monthDiff), QString::number(day));
         db->SetFilter(tempFilter);
-        while (model->canFetchMore()) {
-            model->fetchMore();
+        while (recordModel->canFetchMore()) {
+            recordModel->fetchMore();
         }
-        int count =  model->rowCount();
+        int count =  recordModel->rowCount();
         if (count > max) {
             max = count;
         }
@@ -209,17 +214,17 @@ int InOutOperator::getExpCountOfDay(QString year, QString month) {
 }
 
 QString InOutOperator::get(int row, int role) const {
-    return model->record(row).value(role).toString();
+    return recordModel->record(row).value(role).toString();
 }
 
 bool InOutOperator::deleteRow(int row) {
-    if (model->removeRow(row)) {
-        if (model->submit()) {
+    if (recordModel->removeRow(row)) {
+        if (recordModel->submit()) {
             emit updateDatabaseDone();
             return true;
         }
     }
-    qDebug() << "Delete row error : " << model->lastError().text();
+    qDebug() << "Delete row error : " << recordModel->lastError().text();
     return false;
 }
 
@@ -289,4 +294,72 @@ void InOutOperator::PackFilterFrame() {
 void InOutOperator::CreateLines() {
     m_lineYear = new QLineSeries();
     m_lineMonth = new QLineSeries();
+}
+
+void InOutOperator::AddCount()
+{
+    QDate today = QDate::currentDate();
+    QString year = today.toString("yyyy");
+    QString month = today.toString("yyyy-MM");
+    QString day = today.toString("yyyy-MM-dd");
+    // add year count
+    yearModel->setFilter(QString("Year = '%1'").arg(year));
+    if(yearModel->rowCount() == 0) {
+        QSqlRecord newRecord = yearModel->record();
+        newRecord.setValue("Year", year);
+        newRecord.setValue("Count", 1);
+        yearModel->insertRecord(-1, newRecord);
+        if(!yearModel->submitAll()) {
+            qDebug() << "Insert year table error: " << yearModel->lastError().text();
+            yearModel->revertAll();
+        }
+    } else {
+        QSqlRecord record = yearModel->record(0);
+        record.setValue("Count", record.value("Count").toInt() + 1);
+        yearModel->setRecord(0, record);
+        if(!yearModel->submitAll()) {
+            qDebug() << "Update year table error: " << yearModel->lastError().text();
+            yearModel->revertAll();
+        }
+    }
+    // add month count
+    monthModel->setFilter(QString("Month = '%1'").arg(month));
+    if(monthModel->rowCount() == 0) {
+        QSqlRecord newRecord = monthModel->record();
+        newRecord.setValue("Month", month);
+        newRecord.setValue("Count", 1);
+        monthModel->insertRecord(-1, newRecord);
+        if(!monthModel->submitAll()) {
+            qDebug() << "Insert month table error: " << monthModel->lastError().text();
+            monthModel->revertAll();
+        }
+    } else {
+        QSqlRecord record = monthModel->record(0);
+        record.setValue("Count", record.value("Count").toInt() + 1);
+        monthModel->setRecord(0, record);
+        if(!monthModel->submitAll()) {
+            qDebug() << "Update month table error: " << monthModel->lastError().text();
+            monthModel->revertAll();
+        }
+    }
+    // add day count
+    dayModel->setFilter(QString("Day = '%1'").arg(day));
+    if(dayModel->rowCount() == 0) {
+        QSqlRecord newRecord = dayModel->record();
+        newRecord.setValue("Day", day);
+        newRecord.setValue("Count", 1);
+        dayModel->insertRecord(-1, newRecord);
+        if(!dayModel->submitAll()) {
+            qDebug() << "Insert day table error: " << dayModel->lastError().text();
+            dayModel->revertAll();
+        }
+    } else {
+        QSqlRecord record = dayModel->record(0);
+        record.setValue("Count", record.value("Count").toInt() + 1);
+        dayModel->setRecord(0, record);
+        if(!dayModel->submitAll()) {
+            qDebug() << "Update day table error: " << dayModel->lastError().text();
+            dayModel->revertAll();
+        }
+    }
 }

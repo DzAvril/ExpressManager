@@ -10,15 +10,24 @@ class DbOperate : public QObject {
   public:
     explicit DbOperate(QObject *parent = nullptr);
     bool OpenDB(const QString &path);
-    bool InsertItem(const QString &barcode, QString &name, QString &phone);
+    bool InsertRecord(const QString &barcode, QString &name, QString &phone);
     bool UpdateClientPhotoUrl(const QString &barcode, QString &photoUrl);
     bool UpdateOrderPhotoUrl(const QString &barcode, QString &photoUrl);
     bool UpdateIsTaken(const QString &barcode, int isTaken);
     bool UpdateOutDate(const QString &barcode, const QString &outDate);
     bool IsItemExist(const QString &barcode);
     bool IsItemOut(const QString &barcode);
-    inline SqlTableModel *expTableModel() const {
-        return m_expTableModel;
+    inline SqlTableModel *GetRecordModel() const {
+        return m_recordModel;
+    }
+    inline SqlTableModel *GetYearModel() const {
+        return m_yearModel;
+    }
+    inline SqlTableModel *GetMonthModel() const {
+        return m_monthModel;
+    }
+    inline SqlTableModel *GetDayModel() const {
+        return m_dayModel;
     }
     void RefreshModel();
     void SetFilter(QString &filterStr);
@@ -35,11 +44,17 @@ class DbOperate : public QObject {
 
   private:
     QSqlDatabase db;
-    bool IsRecordTableExist();
+    bool IsTableExist(QString tableName);
     bool CreateRecordTable();
+    bool CreateYearTable();
+    bool CreateMonthTable();
+    bool CreateDayTable();
     int GetItemsCount();
     FileIo *fileIo;
-    SqlTableModel *m_expTableModel;
+    SqlTableModel *m_recordModel;
+    SqlTableModel *m_yearModel;
+    SqlTableModel *m_monthModel;
+    SqlTableModel *m_dayModel;
   signals:
 
   public slots:
