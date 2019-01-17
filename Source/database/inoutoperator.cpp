@@ -26,6 +26,7 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     filterEndOutDate.clear();
     GetEarliestExpDate();
     CreateLines();
+    GetMost();
 }
 
 bool InOutOperator::in(QString barcode, QString name, QString phone) {
@@ -60,6 +61,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
     }
     speech->say(OUT_SUCCESS);
     AddCount();
+    GetMost();
     emit updateDatabaseDone();
     return true;
 }
@@ -354,4 +356,27 @@ void InOutOperator::AddCount() {
             dayModel->revertAll();
         }
     }
+}
+
+void InOutOperator::GetMost() {
+    yearModel->setSort(1, Qt::SortOrder::DescendingOrder);
+    m_mostYear = yearModel->record(0).value("Year").toString();
+    m_mostYearNumber = yearModel->record(0).value("Count").toString();
+    yearModel->setSort(0, Qt::SortOrder::DescendingOrder);
+    emit mostYearChanged();
+    emit mostYearNumberChanged();
+
+    monthModel->setSort(1, Qt::SortOrder::DescendingOrder);
+    m_mostMonth = monthModel->record(0).value("Month").toString();
+    m_mostMonthNumber = monthModel->record(0).value("Count").toString();
+    monthModel->setSort(0, Qt::SortOrder::DescendingOrder);
+    emit mostMonthChanged();
+    emit mostMonthNumberChanged();
+
+    dayModel->setSort(1, Qt::SortOrder::DescendingOrder);
+    m_mostDay = dayModel->record(0).value("Day").toString();
+    m_mostDayNumber = dayModel->record(0).value("Count").toString();
+    dayModel->setSort(0, Qt::SortOrder::DescendingOrder);
+    emit mostDayChanged();
+    emit mostDayNumberChanged();
 }

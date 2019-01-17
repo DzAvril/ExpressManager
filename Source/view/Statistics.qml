@@ -105,6 +105,30 @@ Item {
                 font.pointSize: 40
                 font.bold: true
             }
+            Label{
+                id: mostYearLbl
+                anchors.bottom: mostMonthLbl.top
+                anchors.bottomMargin: 3
+                anchors.right: parent.right
+                text: inOutOperator.mostYear + " 年发件数最多共：" + inOutOperator.mostYearNumber + " 件"
+                font.family: "Arial"
+            }
+            Label {
+                id: mostMonthLbl
+                anchors.bottom: mostDayLbl.top
+                anchors.bottomMargin: 3
+                anchors.right: parent.right
+                text: inOutOperator.mostMonth + " 月发件数最多共：" + inOutOperator.mostMonthNumber + " 件"
+                font.family: "Arial"
+            }
+            Label {
+                id: mostDayLbl
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 3
+                anchors.right: parent.right
+                text: inOutOperator.mostDay + " 日发件数最多共：" + inOutOperator.mostDayNumber + " 件"
+                font.family: "Arial"
+            }
         }
         Item {
             id: yearChart

@@ -16,6 +16,12 @@ class InOutOperator : public QObject {
     Q_PROPERTY(QLineSeries *lineYear READ lineYear WRITE set_lineYear NOTIFY lineYearChanged)
     Q_PROPERTY(QLineSeries *lineMonth READ lineMonth WRITE set_lineMonth NOTIFY lineMonthChanged)
     Q_PROPERTY(QString earliestDate READ earliestDate NOTIFY earliestYearChanged)
+    Q_PROPERTY(QString mostYearNumber READ mostYearNumber NOTIFY mostYearNumberChanged)
+    Q_PROPERTY(QString mostMonthNumber READ mostMonthNumber NOTIFY mostMonthNumberChanged)
+    Q_PROPERTY(QString mostDayNumber READ mostDayNumber NOTIFY mostDayNumberChanged)
+    Q_PROPERTY(QString mostYear READ mostYear NOTIFY mostYearChanged)
+    Q_PROPERTY(QString mostMonth READ mostMonth NOTIFY mostMonthChanged)
+    Q_PROPERTY(QString mostDay READ mostDay NOTIFY mostDayChanged)
   public:
     explicit InOutOperator(QObject *parent = nullptr);
     Q_INVOKABLE bool in(QString barcode, QString name = nullptr,
@@ -47,6 +53,24 @@ class InOutOperator : public QObject {
     inline QString earliestDate() const {
         return m_earliestDate;
     }
+    inline QString mostYearNumber() const {
+        return m_mostYearNumber;
+    }
+    inline QString mostMonthNumber() const {
+        return m_mostMonthNumber;
+    }
+    inline QString mostDayNumber() const {
+        return m_mostDayNumber;
+    }
+    inline QString mostYear() const {
+        return m_mostYear;
+    }
+    inline QString mostMonth() const {
+        return m_mostMonth;
+    }
+    inline QString mostDay() const {
+        return m_mostDay;
+    }
   private:
     DbOperate *db;
     SqlTableModel *recordModel;
@@ -66,12 +90,25 @@ class InOutOperator : public QObject {
     void GetEarliestExpDate();
     void CreateLines();
     void AddCount();
+    QString m_mostYearNumber;
+    QString m_mostMonthNumber;
+    QString m_mostDayNumber;
+    QString m_mostYear;
+    QString m_mostMonth;
+    QString m_mostDay;
+    void GetMost();
   signals:
     void updateDatabaseDone();
     void lineYearChanged();
     void lineMonthChanged();
     void yearListChanged();
     void earliestYearChanged();
+    void mostYearNumberChanged();
+    void mostMonthNumberChanged();
+    void mostDayNumberChanged();
+    void mostYearChanged();
+    void mostMonthChanged();
+    void mostDayChanged();
   public slots:
 };
 
