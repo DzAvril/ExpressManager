@@ -45,7 +45,7 @@ Item {
                 anchors.leftMargin: 10
                 anchors.verticalCenter: from.verticalCenter
                 calendarWidth: 100
-                dateValue: inOutOperator.earliestYear ? inOutOperator.earliestYear
+                dateValue: inOutOperator.earliestDate ? inOutOperator.earliestDate
                                                               : (new Date()).toLocaleString(Qt.locale(), "yyyy-MM-dd")
                 onDateValueChanged: {
                 }
@@ -157,7 +157,7 @@ Item {
 
                 LineSeries {
                     id: year
-                    pointsVisible: true
+                    pointsVisible: false
                     pointLabelsVisible: false
                     pointLabelsFormat: "@yPoint"
                     pointLabelsClipping: false
@@ -179,6 +179,7 @@ Item {
                     }
                     onHovered: {
                         pointLabelsVisible = !pointLabelsVisible;
+                        pointsVisible = !pointsVisible;
                     }                    
                 }
             }
@@ -234,7 +235,7 @@ Item {
 
                 LineSeries {
                     id: month
-                    pointsVisible: true
+                    pointsVisible: false
                     pointLabelsVisible: false
                     pointLabelsFormat: "@yPoint"
                     pointLabelsClipping: false
@@ -257,6 +258,7 @@ Item {
                     }
                     onHovered: {
                         pointLabelsVisible = !pointLabelsVisible;
+                        pointsVisible = !pointsVisible;
                     }
                 }
             }

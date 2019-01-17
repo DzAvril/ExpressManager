@@ -15,7 +15,7 @@ class InOutOperator : public QObject {
     Q_PROPERTY(QStringList  yearList READ yearList NOTIFY yearListChanged)
     Q_PROPERTY(QLineSeries *lineYear READ lineYear WRITE set_lineYear NOTIFY lineYearChanged)
     Q_PROPERTY(QLineSeries *lineMonth READ lineMonth WRITE set_lineMonth NOTIFY lineMonthChanged)
-    Q_PROPERTY(QString earliestYear READ earliestYear NOTIFY earliestYearChanged)
+    Q_PROPERTY(QString earliestDate READ earliestDate NOTIFY earliestYearChanged)
   public:
     explicit InOutOperator(QObject *parent = nullptr);
     Q_INVOKABLE bool in(QString barcode, QString name = nullptr,
@@ -31,7 +31,6 @@ class InOutOperator : public QObject {
     Q_INVOKABLE int getExpCountFromDateRange(QString start, QString end);
     Q_INVOKABLE int getExpCountOfMonth(QString year);
     Q_INVOKABLE int getExpCountOfDay(QString year, QString month);
-    Q_INVOKABLE QString get(int row, int role) const;
     Q_INVOKABLE bool deleteRow(int row);
     QStringList  yearList();
     inline QLineSeries *lineYear() {
@@ -45,8 +44,8 @@ class InOutOperator : public QObject {
     inline DbOperate *expDb() const {
         return db;
     }
-    inline QString earliestYear() const {
-        return m_earliestYear;
+    inline QString earliestDate() const {
+        return m_earliestDate;
     }
   private:
     DbOperate *db;
@@ -63,7 +62,7 @@ class InOutOperator : public QObject {
     QStringList  m_yearList;
     QLineSeries *m_lineYear;
     QLineSeries *m_lineMonth;
-    QString m_earliestYear;
+    QString m_earliestDate;
     void GetEarliestExpDate();
     void CreateLines();
     void AddCount();

@@ -21,25 +21,25 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
             qDebug("Table record is not exist, creat now.");
             CreateRecordTable();
         } else {
-            qDebug("Table record is exist.");
+//            qDebug("Table record is exist.");
         }
         if (!IsTableExist("year")) {
             qDebug("Table year is not exist, creat now.");
             CreateYearTable();
         } else {
-            qDebug("Table year is exist.");
+//            qDebug("Table year is exist.");
         }
         if (!IsTableExist("month")) {
             qDebug("Table month is not exist, creat now.");
             CreateMonthTable();
         } else {
-            qDebug("Table month is exist.");
+//            qDebug("Table month is exist.");
         }
         if (!IsTableExist("day")) {
             qDebug("Table day is not exist, creat now.");
             CreateDayTable();
         } else {
-            qDebug("Table day is exist.");
+//            qDebug("Table day is exist.");
         }
         m_recordModel = new SqlTableModel(this, db);
         m_recordModel->setTable("record");

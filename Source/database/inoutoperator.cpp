@@ -141,18 +141,16 @@ void InOutOperator::updateOrderPhoto(QString barcode, QString photoUrl) {
 
 void InOutOperator::GetEarliestExpDate() {
     QString tempFilter = "";
-    db->SetFilter(tempFilter);
-    while (recordModel->canFetchMore()) {
-        recordModel->fetchMore();
+    dayModel->setFilter(tempFilter);
+    while (dayModel->canFetchMore()) {
+        dayModel->fetchMore();
     }
-    int counts = recordModel->rowCount();
+    int counts = dayModel->rowCount();
     if (counts != 0) {
-        QString s = get(counts - 1, db->OUTDATE);
-        db->SetFilter(filterString);
-        m_earliestYear = s.mid(0, 10); // 2019-01-01
+        QSqlRecord record = dayModel->record(counts - 1);
+        m_earliestDate = record.value("Day").toString();
     } else {
-        db->SetFilter(filterString);
-        m_earliestYear = nullptr;
+        m_earliestDate = nullptr;
     }
 }
 
@@ -171,23 +169,23 @@ int InOutOperator::getExpCountFromDateRange(QString start, QString end) {
 int InOutOperator::getExpCountOfMonth(QString year) {
     QVector<QPointF> points;
     int max = 0;
-    for (int mon = 0; mon <= 11; ++mon) {
-        QString startDate = QString("date('%1-01-01', '+%2 month')").arg(year, QString::number(mon));
-        QString endDate = QString("date('%1-01-01', '+%2 month', '+1 month', '-1 day')").arg(year, QString::number(mon));
-        QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) >= %1 and strftime('%Y-%m-%d', OutDate) <= %2").arg(
-                                 startDate, endDate);
-        db->SetFilter(tempFilter);
-        while (recordModel->canFetchMore()) {
-            recordModel->fetchMore();
+    for (int mon = 1; mon <= 12; ++mon) {
+        QString month;
+        if(mon < 10) {
+            month = QString("%1-0%2").arg(year, QString::number(mon));
+        } else {
+            month = QString("%1-%2").arg(year, QString::number(mon));
         }
-        int count =  recordModel->rowCount();
+        QString tempFilter = QString("Month = '%1'").arg(month);
+        monthModel->setFilter(tempFilter);
+        int count = monthModel->record(0).value("Count").toInt();
+
         if (count > max) {
             max = count;
         }
-        points.append(QPointF(mon + 1, count));
+        points.append(QPointF(mon, count));
     }
     m_lineYear->replace(points);
-    db->SetFilter(filterString);
     return (max % 10 == 0) && (max != 0) ? max : ((max / 10) + 1) * 10;
 }
 
@@ -196,25 +194,17 @@ int InOutOperator::getExpCountOfDay(QString year, QString month) {
     int max = 0; //max of axisY
     int monthDiff = month.toInt() - 1;
     for (int day = 0; day < 31; ++day) {
-        QString tempFilter = QString("strftime('%Y-%m-%d', OutDate) = date('%1-01-01', '+%2 month', '+%3 day')").arg(year,
+        QString tempFilter = QString("Day = date('%1-01-01', '+%2 month', '+%3 day')").arg(year,
                              QString::number(monthDiff), QString::number(day));
-        db->SetFilter(tempFilter);
-        while (recordModel->canFetchMore()) {
-            recordModel->fetchMore();
-        }
-        int count =  recordModel->rowCount();
+        dayModel->setFilter(tempFilter);
+        int count = dayModel->record(0).value("Count").toInt();
         if (count > max) {
             max = count;
         }
         points.append(QPointF(day + 1, count));
     }
     m_lineMonth->replace(points);
-    db->SetFilter(filterString);
     return (max % 10 == 0) && (max != 0) ? max : ((max / 10) + 1) * 10;
-}
-
-QString InOutOperator::get(int row, int role) const {
-    return recordModel->record(row).value(role).toString();
 }
 
 bool InOutOperator::deleteRow(int row) {
@@ -231,10 +221,10 @@ bool InOutOperator::deleteRow(int row) {
 QStringList InOutOperator::yearList() {
     m_yearList.clear();
     int earliestYear;
-    if(m_earliestYear == nullptr) {
+    if(m_earliestDate == nullptr) {
         earliestYear = 2019;
     } else {
-        earliestYear = QDate::fromString(m_earliestYear, "yyyy-MM-dd").year();
+        earliestYear = QDate::fromString(m_earliestDate, "yyyy-MM-dd").year();
     }
     int thisYear = QDate::currentDate().year();
     for (int year = earliestYear; year <= thisYear; ++year) {

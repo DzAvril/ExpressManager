@@ -381,8 +381,6 @@ Item {
             MenuItem {
                 text:  qsTr("在文件系统中打开")
                 onClicked: {
-                    console.log(tableView.currentRow)
-                    console.log(inOutOperator.get(tableView.currentRow, 7))
                     fileIo.revealInExplore(preview.source)
                 }
             }
