@@ -218,7 +218,7 @@ Item {
                         anchors.fill: parent
                         onClicked: {
                             if(styleData.value) {
-                                console.log(parent.source)
+//                                console.log(parent.source)
                                 previewItem.visible = true
                                 bulr.visible = true
                                 preview.source = parent.source
