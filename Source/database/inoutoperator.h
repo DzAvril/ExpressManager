@@ -38,6 +38,7 @@ class InOutOperator : public QObject {
     Q_INVOKABLE int getExpCountOfMonth(QString year);
     Q_INVOKABLE int getExpCountOfDay(QString year, QString month);
     Q_INVOKABLE bool deleteRow(int row);
+    Q_INVOKABLE bool markUnOut(int row);
     QStringList  yearList();
     inline QLineSeries *lineYear() {
         return m_lineYear;
@@ -89,7 +90,7 @@ class InOutOperator : public QObject {
     QString m_earliestDate;
     void GetEarliestExpDate();
     void CreateLines();
-    void AddCount();
+    void UpdateCount(bool isAdd);
     QString m_mostYearNumber;
     QString m_mostMonthNumber;
     QString m_mostDayNumber;

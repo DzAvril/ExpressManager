@@ -21,8 +21,4 @@ void Startup::SystemUp() {
     if (!fileIo->IsPathExist(path)) {
         fileIo->CreateDir(path);
     }
-    path = QGuiApplication::applicationDirPath() + TEMP_PATH;
-    if (!fileIo->IsPathExist(path)) {
-        fileIo->CreateDir(path);
-    }
 }

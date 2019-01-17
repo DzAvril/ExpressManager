@@ -109,6 +109,13 @@ Item {
                         deleteMsgDig.open()
                     }
                 }
+
+                MenuItem {
+                    text:  qsTr("取消出库")
+                    onClicked: {
+                        cancelMsgDig.open()
+                    }
+                }
             }
             MessageDialog {
                 id: deleteMsgDig
@@ -123,6 +130,19 @@ Item {
                     }
                 }
                 onRejected: deleteMsgDig.close()
+            }
+            MessageDialog {
+                id: cancelMsgDig
+                title: "确认取消吗？"
+                icon: StandardIcon.Warning
+                text: "确认取消该快递的出库记录吗？"
+                standardButtons: StandardButton.Ok | StandardButton.Cancel
+                onAccepted: {
+                    if(inOutOperator.markUnOut(tableView.currentRow)) {
+                        tableView.selection.clear()
+                    }
+                }
+                onRejected: cancelMsgDig.close()
             }
 
             rowDelegate: Rectangle {
