@@ -401,23 +401,29 @@ void InOutOperator::UpdateCount(bool isAdd) {
 
 void InOutOperator::GetMost() {
     yearModel->setSort(1, Qt::SortOrder::DescendingOrder);
+    yearModel->select();
     m_mostYear = yearModel->record(0).value("Year").toString();
     m_mostYearNumber = yearModel->record(0).value("Count").toString();
     yearModel->setSort(0, Qt::SortOrder::DescendingOrder);
+    yearModel->select();
     emit mostYearChanged();
     emit mostYearNumberChanged();
 
     monthModel->setSort(1, Qt::SortOrder::DescendingOrder);
+    monthModel->select();
     m_mostMonth = monthModel->record(0).value("Month").toString();
     m_mostMonthNumber = monthModel->record(0).value("Count").toString();
     monthModel->setSort(0, Qt::SortOrder::DescendingOrder);
+    monthModel->select();
     emit mostMonthChanged();
     emit mostMonthNumberChanged();
 
     dayModel->setSort(1, Qt::SortOrder::DescendingOrder);
+    dayModel->select();
     m_mostDay = dayModel->record(0).value("Day").toString();
     m_mostDayNumber = dayModel->record(0).value("Count").toString();
     dayModel->setSort(0, Qt::SortOrder::DescendingOrder);
+    dayModel->select();
     emit mostDayChanged();
     emit mostDayNumberChanged();
 }
