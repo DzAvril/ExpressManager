@@ -14,13 +14,13 @@ FileIo::FileIo(const FileIo &) {
 
 }
 
-FileIo &FileIo::operator=(const FileIo &) {
+//FileIo &FileIo::operator=(const FileIo &) {
 
-}
+//}
 
 FileIo *FileIo::instance = new FileIo();
 bool FileIo::IsPathExist(const QString &path) {
-//    qDebug() << "Check is path " << path << "exist";
+    //    qDebug() << "Check is path " << path << "exist";
     QDir dir(path);
     if (dir.exists()) {
         return true;

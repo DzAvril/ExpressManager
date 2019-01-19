@@ -59,7 +59,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
         fileIo->DeleteFile(photoUrl);
         return false;
     }
-    speech->say(OUT_SUCCESS);
+    speech->say("出库成功");
     UpdateCount(true);
     GetMost();
     emit updateDatabaseDone();
@@ -399,7 +399,12 @@ void InOutOperator::UpdateCount(bool isAdd) {
     }
 }
 
-void InOutOperator::GetMost() {
+void InOutOperator::GetMost() {    
+    QString tempFilter = "";
+    yearModel->setFilter(tempFilter);
+    monthModel->setFilter(tempFilter);
+    dayModel->setFilter(tempFilter);
+
     yearModel->setSort(1, Qt::SortOrder::DescendingOrder);
     yearModel->select();
     m_mostYear = yearModel->record(0).value("Year").toString();

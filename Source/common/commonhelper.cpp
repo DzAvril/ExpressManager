@@ -12,9 +12,9 @@ CommonHelper::CommonHelper(const CommonHelper &) {
 
 }
 
-CommonHelper &CommonHelper::operator=(const CommonHelper &) {
+//CommonHelper &CommonHelper::operator=(const CommonHelper &) {
 
-}
+//}
 
 CommonHelper *CommonHelper::instance = new CommonHelper();
 CommonHelper *CommonHelper::getInstance() {

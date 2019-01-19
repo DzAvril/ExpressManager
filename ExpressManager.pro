@@ -40,19 +40,23 @@ INCLUDEPATH += Source/common \
 Source/database \
 Source/opencv \
 
-LIBS += libopencv_core401.dll \
--lopencv_imgproc401.dll \
-libopencv_imgcodecs401.dll \
-libopencv_videoio401.dll \
-libopencv_flann401.dll \
-libopencv_highgui401.dll \
-libopencv_features2d401.dll \
-libopencv_photo401.dll \
-libopencv_video401.dll \
-libopencv_calib3d401.dll \
-libopencv_objdetect401.dll \
-libopencv_stitching401.dll \
-libopencv_ml401.dll\
+#LIBS += libopencv_core401.dll \
+#-lopencv_imgproc401.dll \
+#libopencv_imgcodecs401.dll \
+#libopencv_videoio401.dll \
+#libopencv_flann401.dll \
+#libopencv_highgui401.dll \
+#libopencv_features2d401.dll \
+#libopencv_photo401.dll \
+#libopencv_video401.dll \
+#libopencv_calib3d401.dll \
+#libopencv_objdetect401.dll \
+#libopencv_stitching401.dll \
+#libopencv_ml401.dll\
+win32:LIBS += "C:\opencv-4.0.1\build\install-msvc2017-x86\x86\vc15\lib\opencv_core401.lib" \
+"C:\opencv-4.0.1\build\install-msvc2017-x86\x86\vc15\lib\opencv_imgproc401.lib" \
+"C:\opencv-4.0.1\build\install-msvc2017-x86\x86\vc15\lib\opencv_imgcodecs401.lib" \
+"C:\opencv-4.0.1\build\install-msvc2017-x86\x86\vc15\lib\opencv_objdetect401.lib" \
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

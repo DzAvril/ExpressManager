@@ -1,4 +1,4 @@
-#ifndef CONFIG_H
+﻿#ifndef CONFIG_H
 #define CONFIG_H
 #include <QString>
 
@@ -21,9 +21,5 @@ const QString ITEM_EXIST = "快递已入库，无需重新入库";
 const QString IN_ERROR = "入库失败";
 const QString OUT_ERROR = "出库失败";
 const QString NO_SUCH_ITEM = "仓库中无该快递";
-
-//barcode
-static const char *BARCODE_READER_PY_MODULE = "barcodeReader";
-static const char *BARCODE_READER_PY_FUN = "readBarcode";
 
 #endif // CONFIG_H
