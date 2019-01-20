@@ -7,7 +7,8 @@ ApplicationWindow {
     visible: true
     minimumWidth : 800
     minimumHeight : 550
-    title: qsTr("Express Manager")
+    title: qsTr("快递管家")
+    visibility : Window.Maximized
 
     header:TabBar {
         id : bar

@@ -97,9 +97,11 @@ Item {
 
     function captureImage(photoName) {
         // speech.say("开始拍照")
-        while(!isFaceDetected) {
-            speech.say("未检测到人脸")
-            commonHelper.delay(5000)
+        if(cbFaceDetect.checked) {
+            while(!isFaceDetected) {
+                speech.say("未检测到人脸")
+//                commonHelper.delay(5000)
+            }
         }
         camera.imageCapture.captureToLocation(fileIo.getPhotoPath() + photoName);
     }
@@ -214,7 +216,7 @@ Item {
                 anchors.topMargin: 30
                 source: barcodeCamera
                 focus : visible // to receive focus and capture key events when visible
-                filters: [zxingFilter]
+//                filters: [zxingFilter]
 
                 Text {
                     id: barcodeCameraTip
@@ -394,6 +396,7 @@ Item {
             }
 
             QC.Button {
+                id: faceCameraSourceBtn
                 height: cameraIds.height
                 width: 50
                 anchors.left: cameraIds.right
@@ -404,6 +407,20 @@ Item {
                     faceCameraTip.visible = false
                     cameraIds.model = QtMultimedia.availableCameras
                     camera.start()
+                }
+            }
+
+            CheckBox {
+                id: cbFaceDetect
+                anchors.left: faceCameraSourceBtn.right
+                anchors.leftMargin: 3
+                anchors.verticalCenter: faceCameraSourceBtn.verticalCenter
+                text: qsTr("人脸检测")
+                checked: true
+                onCheckedChanged: {
+                    if(!checked) {
+                        faceBoard.visible = false;
+                    }
                 }
             }
 
@@ -442,7 +459,7 @@ Item {
                 anchors.topMargin: 30
                 source: camera
                 focus : visible // to receive focus and capture key events when visible
-                filters: [faceDetectFilter]
+                filters: cbFaceDetect.checked? [faceDetectFilter] : []
 
                 Rectangle
                 {
