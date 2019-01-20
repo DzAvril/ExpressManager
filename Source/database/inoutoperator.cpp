@@ -29,6 +29,15 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     GetMost();
 }
 
+InOutOperator::~InOutOperator() {
+    delete recordModel;
+    delete yearModel;
+    delete monthModel;
+    delete dayModel;
+    delete m_lineYear;
+    delete m_lineMonth;
+}
+
 bool InOutOperator::in(QString barcode, QString name, QString phone) {
     if (db->IsItemExist(barcode)) {
         qDebug() << "Already has item " << barcode;
@@ -399,7 +408,7 @@ void InOutOperator::UpdateCount(bool isAdd) {
     }
 }
 
-void InOutOperator::GetMost() {    
+void InOutOperator::GetMost() {
     QString tempFilter = "";
     yearModel->setFilter(tempFilter);
     monthModel->setFilter(tempFilter);

@@ -21,25 +21,25 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
             qDebug("Table record is not exist, creat now.");
             CreateRecordTable();
         } else {
-//            qDebug("Table record is exist.");
+            //            qDebug("Table record is exist.");
         }
         if (!IsTableExist("year")) {
             qDebug("Table year is not exist, creat now.");
             CreateYearTable();
         } else {
-//            qDebug("Table year is exist.");
+            //            qDebug("Table year is exist.");
         }
         if (!IsTableExist("month")) {
             qDebug("Table month is not exist, creat now.");
             CreateMonthTable();
         } else {
-//            qDebug("Table month is exist.");
+            //            qDebug("Table month is exist.");
         }
         if (!IsTableExist("day")) {
             qDebug("Table day is not exist, creat now.");
             CreateDayTable();
         } else {
-//            qDebug("Table day is exist.");
+            //            qDebug("Table day is exist.");
         }
         m_recordModel = new SqlTableModel(this, db);
         m_recordModel->setTable("record");
@@ -57,8 +57,15 @@ DbOperate::DbOperate(QObject *parent) : QObject(parent) {
     }
 }
 
+DbOperate::~DbOperate() {
+    delete m_recordModel;
+    delete m_yearModel;
+    delete m_monthModel;
+    delete m_dayModel;
+}
+
 bool DbOperate::OpenDB(const QString &path) {
-//    qDebug()  << "QSqlDatabase :: Drivers ()==" << QSqlDatabase::drivers();
+    //    qDebug()  << "QSqlDatabase :: Drivers ()==" << QSqlDatabase::drivers();
     db = QSqlDatabase::addDatabase("QSQLITE", "project");
     db.setDatabaseName(path);
     db = QSqlDatabase::database("project");
@@ -101,8 +108,7 @@ bool DbOperate::CreateRecordTable() {
     return true;
 }
 
-bool DbOperate::CreateYearTable()
-{
+bool DbOperate::CreateYearTable() {
     QSqlQuery query(db);
     query.exec("CREATE TABLE year ("
                "Year TEXT PRIMARY KEY, "
@@ -115,8 +121,7 @@ bool DbOperate::CreateYearTable()
     return true;
 }
 
-bool DbOperate::CreateMonthTable()
-{
+bool DbOperate::CreateMonthTable() {
     QSqlQuery query(db);
     query.exec("CREATE TABLE month ("
                "Month TEXT PRIMARY KEY, "
@@ -129,8 +134,7 @@ bool DbOperate::CreateMonthTable()
     return true;
 }
 
-bool DbOperate::CreateDayTable()
-{
+bool DbOperate::CreateDayTable() {
     QSqlQuery query(db);
     query.exec("CREATE TABLE day ("
                "Day TEXT PRIMARY KEY, "

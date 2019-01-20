@@ -9,6 +9,7 @@ class DbOperate : public QObject {
     Q_OBJECT
   public:
     explicit DbOperate(QObject *parent = nullptr);
+    ~DbOperate();
     bool OpenDB(const QString &path);
     bool InsertRecord(const QString &barcode, QString &name, QString &phone);
     bool UpdateClientPhotoUrl(const QString &barcode, QString &photoUrl);

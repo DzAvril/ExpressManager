@@ -24,6 +24,7 @@ class InOutOperator : public QObject {
     Q_PROPERTY(QString mostDay READ mostDay NOTIFY mostDayChanged)
   public:
     explicit InOutOperator(QObject *parent = nullptr);
+    ~InOutOperator();
     Q_INVOKABLE bool in(QString barcode, QString name = nullptr,
                         QString phone = nullptr);
     Q_INVOKABLE bool out(QString barcode, QString photoUrl);
