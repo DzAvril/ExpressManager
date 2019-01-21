@@ -64,7 +64,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
     if (!(db->UpdateClientPhotoUrl(barcode, photoUrl))
         || (!db->UpdateIsTaken(barcode, 1))
         || (!db->UpdateOutDate(barcode, timeStr))) {
-        speech->say(OUT_ERROR);
+        speech->say("出库失败");
         fileIo->DeleteFile(photoUrl);
         return false;
     }
@@ -77,7 +77,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
 
 bool InOutOperator::isItemAlreadyOut(QString barcode) {
     if (db->IsItemOut(barcode)) {
-        speech->say(ALREADY_EXIST);
+        speech->say("该快递已出库");
         return true;
     }
     return false;

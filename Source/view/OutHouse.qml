@@ -14,6 +14,7 @@ Item {
     property int maxCount : 3
     property bool canProcessBarcode: true
     property  string  orderPhotoUrl: ""
+    property bool startFaceDetect: false
 
     property alias outHoustPageHeight: outHoustPage.height
     property alias outHoustPageWidth: outHoustPage.width
@@ -58,7 +59,7 @@ Item {
             )));
         }
         decoder {
-            enabledDecoders: QZXing.DecoderFormat_CODE_128 | QZXing.DecoderFormat_EAN_13
+            enabledDecoders: QZXing.DecoderFormat_CODE_128
             onTagFound: {
                 if(canProcessBarcode){
 //                    console.log("barcode detected :" + tag)
@@ -74,11 +75,12 @@ Item {
                         detectedCount++
                     }
                     if(detectedCount === maxCount) {
+                        barcodeScanedTipSound.play()
                         canProcessBarcode = false
 //                        console.log("Read barcode success, result is " + tag)
                         barcode.text = tag
-                        barcodeScanedTipSound.play()
-                        if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
+                        if(!inOutOperator.isItemAlreadyOut(barcode.text)) {                            
+                            startFaceDetect = true;
                             captureImage("/" + barcode.text + ".jpg");
                             captureExpOrder("/" + barcode.text + "_order.jpg")
                         } else {
@@ -98,12 +100,15 @@ Item {
     function captureImage(photoName) {
         // speech.say("开始拍照")
         if(cbFaceDetect.checked) {
+            commonHelper.delay(1000)
             while(!isFaceDetected) {
                 speech.say("未检测到人脸")
-//                commonHelper.delay(5000)
+                commonHelper.delay(500)
             }
         }
+        startFaceDetect = false;
         camera.imageCapture.captureToLocation(fileIo.getPhotoPath() + photoName);
+        isFaceDetected =false;
     }
 
     function captureExpOrder(photoName) {
@@ -162,7 +167,7 @@ Item {
                 anchors.verticalCenter: barcodeSourceLable.verticalCenter
                 anchors.left: barcodeSourceLable.right
                 anchors.leftMargin: 5
-                currentIndex: 1
+                currentIndex: 0
                 model : QtMultimedia.availableCameras
 
                 textRole: "displayName"
@@ -191,7 +196,7 @@ Item {
                 focus {
                     focusPointMode: CameraFocus.FocusPointAuto
                 }
-                deviceId: QtMultimedia.availableCameras[1].deviceId
+                deviceId: QtMultimedia.availableCameras[0].deviceId
                 onError: {
                     console.log("error of barcodeCamera " + errorString)
                     barcodeCameraTip.visible = true
@@ -216,7 +221,7 @@ Item {
                 anchors.topMargin: 30
                 source: barcodeCamera
                 focus : visible // to receive focus and capture key events when visible
-//                filters: [zxingFilter]
+                filters: [zxingFilter]
 
                 Text {
                     id: barcodeCameraTip
@@ -282,6 +287,7 @@ Item {
                             speech.say("快递单号不能为空")
                         } else {
                             if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
+                                startFaceDetect = true;
                                 captureImage("/" + barcode.text + ".jpg");
                             } else {
                                 barcode.text = ""
@@ -385,7 +391,7 @@ Item {
                 anchors.verticalCenter: sourceLable.verticalCenter
                 anchors.left: sourceLable.right
                 anchors.leftMargin: 5
-                currentIndex: 0
+                currentIndex: 1
                 model : QtMultimedia.availableCameras
 
                 textRole: "displayName"
@@ -429,6 +435,7 @@ Item {
                 focus {
                     focusPointMode: CameraFocus.FocusPointAuto
                 }
+                deviceId: QtMultimedia.availableCameras[1].deviceId
                 onError: {
                     console.log("error of camera " + errorString)
                     faceCameraTip.visible = true
@@ -446,6 +453,7 @@ Item {
                             phone.text = ""
                         }
                         canProcessBarcode = true
+                        faceBoard.visible = false;
                     }
                 }
             }
@@ -459,7 +467,7 @@ Item {
                 anchors.topMargin: 30
                 source: camera
                 focus : visible // to receive focus and capture key events when visible
-                filters: cbFaceDetect.checked? [faceDetectFilter] : []
+                filters: (cbFaceDetect.checked && startFaceDetect)? [faceDetectFilter] : []
 
                 Rectangle
                 {
