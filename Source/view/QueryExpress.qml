@@ -232,7 +232,8 @@ Item {
                 Image {
                     anchors.fill: parent
                     fillMode: Image.PreserveAspectFit
-                    asynchronous: true;
+                    asynchronous: true;                    
+                    cache : true
                     source: styleData.value ? "file:///" + styleData.value : ""
                     MouseArea {
                         anchors.fill: parent
@@ -409,6 +410,8 @@ Item {
 
         Image {
             id: preview
+            width: subItem.width * 0.8
+            height: width * 9 / 16
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             fillMode: Image.PreserveAspectFit

@@ -55,7 +55,7 @@ Item {
             barcodeVideoOut.contentRect;
             barcodeVideoOut.sourceRect;
             return barcodeVideoOut.mapRectToSource(barcodeVideoOut.mapNormalizedRectToItem(Qt.rect(
-                0.2, 0.2, 0.6, 0.6
+                0.1, 0.1, 0.8, 0.8
             )));
         }
         decoder {
@@ -188,7 +188,7 @@ Item {
                     barcodeCameraTip.visible = false
                     barcodeCameraId.model = QtMultimedia.availableCameras
                     barcodeCamera.start()
-                }
+                    }
             }
 
             Camera {
@@ -197,6 +197,15 @@ Item {
                     focusPointMode: CameraFocus.FocusPointAuto
                 }
                 deviceId: QtMultimedia.availableCameras[0].deviceId
+                viewfinder.resolution: "1920x1080"
+                viewfinder.maximumFrameRate: 30.00003000003
+                viewfinder.minimumFrameRate: 30.00003000003
+                imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceFlash
+                exposure {
+                    exposureCompensation: -1.0
+                    exposureMode: Camera.ExposurePortrait
+                }
+
                 onError: {
                     console.log("error of barcodeCamera " + errorString)
                     barcodeCameraTip.visible = true
@@ -215,7 +224,7 @@ Item {
             VideoOutput {
                 id : barcodeVideoOut
                 width: parent.width * 9 / 10
-                height: width * 3 / 4
+                height: width * 9 / 16
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: barcodeCameraId.bottom
                 anchors.topMargin: 30
@@ -238,8 +247,8 @@ Item {
                     id: captureZone
                     color: "white"
                     opacity: 0.2
-                    width: parent.width * 3 / 5
-                    height: parent.height * 3 / 5
+                    width: parent.width * 4 / 5
+                    height: parent.height * 4 / 5
                     anchors.centerIn: parent
                 }
             }
@@ -436,6 +445,9 @@ Item {
                     focusPointMode: CameraFocus.FocusPointAuto
                 }
                 deviceId: QtMultimedia.availableCameras[1].deviceId
+                viewfinder.resolution: "1920x1080"
+                viewfinder.maximumFrameRate: 30.00003000003
+                viewfinder.minimumFrameRate: 30.00003000003
                 onError: {
                     console.log("error of camera " + errorString)
                     faceCameraTip.visible = true
@@ -461,7 +473,7 @@ Item {
             VideoOutput {
                 id : videoOut
                 width: parent.width * 9 / 10
-                height: width * 3 / 4
+                height: width * 9 / 16
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: cameraIds.bottom
                 anchors.topMargin: 30

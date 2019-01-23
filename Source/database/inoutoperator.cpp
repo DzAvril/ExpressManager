@@ -245,7 +245,7 @@ bool InOutOperator::markUnOut(int row) {
     record.setValue(db->OUTDATE, "");
     record.setValue(db->EXPORDERPHOTOURL, "");
     record.setValue(db->CLIENTPHOTURL, "");
-    recordModel->setRecord(0, record);
+    recordModel->setRecord(row, record);
     if (recordModel->submitAll()) {
         fileIo->DeleteFile(expOrderPhotoUrl);
         fileIo->DeleteFile(clientPhotoUrl);
