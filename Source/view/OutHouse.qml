@@ -19,6 +19,16 @@ Item {
     property alias outHoustPageHeight: outHoustPage.height
     property alias outHoustPageWidth: outHoustPage.width
 
+    function useState(isInUse){
+        if(isInUse) {
+            barcodeCamera.start();
+            camera.start();
+        } else{
+            barcodeCamera.stop();
+            camera.stop();
+        }
+    }
+
     FaceDetectFilter
     {
         id: faceDetectFilter

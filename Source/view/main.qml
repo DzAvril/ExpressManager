@@ -32,6 +32,13 @@ ApplicationWindow {
                 color: bar.currentIndex === 2 ? "grey" : "lightblue"
             }
         }
+        onCurrentIndexChanged: {
+            if(currentIndex !== 0) {
+                outHouse.useState(false);
+            } else {
+                outHouse.useState(true);
+            }
+        }
     }
 
     StackLayout {
@@ -44,6 +51,7 @@ ApplicationWindow {
             height: parent.height
             width: parent.height
             OutHouse {
+                id: outHouse
                 outHoustPageHeight:tabOut.height
                 outHoustPageWidth: tabOut.width
             }
