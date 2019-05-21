@@ -9,7 +9,10 @@
         <file>Source/view/Datepicker.qml</file>
         <file>resource/arrow_down.png</file>
         <file>resource/header.png</file>
-        <file>qtquickcontrols2.conf</file>  
-        <file>resource/scaned.wav</file>    
+        <file>qtquickcontrols2.conf</file>
+        <file>resource/scaned.wav</file>
+        <file>resource/alreadyout.wav</file>
+        <file>resource/noempty.wav</file>
+        <file>resource/outsuccess.wav</file>
     </qresource>
 </RCC>

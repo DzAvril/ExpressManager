@@ -47,16 +47,16 @@ Item {
             }
         }
 
-        Label{
-            width: 362
-            height: 15
-            anchors.left: tableView.left
-            anchors.bottom: tableView.top
-            anchors.bottomMargin: 5
-            text: "*默认显示最近一个月的数据，查看更多数据请选择日期范围"
-            font.pointSize: 8
+//        Label{
+//            width: 362
+//            height: 15
+//            anchors.left: tableView.left
+//            anchors.bottom: tableView.top
+//            anchors.bottomMargin: 5
+//            text: "*默认显示最近一个月的数据，查看更多数据请选择日期范围"
+//            font.pointSize: 8
 
-        }
+//        }
 
         QC.TableView {
             id: tableView
@@ -233,7 +233,7 @@ Item {
                     anchors.fill: parent
                     fillMode: Image.PreserveAspectFit
                     asynchronous: true;                    
-                    cache : true
+                    cache : false
                     source: styleData.value ? "file:///" + styleData.value : ""
                     MouseArea {
                         anchors.fill: parent
@@ -415,7 +415,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             fillMode: Image.PreserveAspectFit
-            cache : true
+            cache : false
             asynchronous: true
             MouseArea {
                 anchors.fill: parent

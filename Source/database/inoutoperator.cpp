@@ -17,8 +17,15 @@ InOutOperator::InOutOperator(QObject *parent) : QObject(parent) {
     monthModel = db->GetMonthModel();
     dayModel = db->GetDayModel();
 
+    QDateTime timestamp = QDateTime::currentDateTime();
+    localTimeNow = timestamp.toString("yyyy-MM-dd hh:mm:ss");
+
     filterString =
-        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now') and IsTaken = 1");
+        QString("strftime('%Y-%m-%d %H:%M:%S', OutDate) > strftime('%Y-%m-%d %H:%M:%S', '%1') and IsTaken = 1").arg(
+            localTimeNow);
+    //            QString("rowid > %1 and IsTaken = 1").arg((recordModel->rowCount() - 10) > 0 ?
+    //                   (recordModel->rowCount() - 10) : 0);
+    //        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now') and IsTaken = 1");
     db->SetFilter(filterString);
     filterBarcode.clear();
     filterOutDate.clear();
@@ -68,7 +75,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
         fileIo->DeleteFile(photoUrl);
         return false;
     }
-    speech->say("出库成功");
+    //    speech->say("出库成功");
     UpdateCount(true);
     GetMost();
     emit updateDatabaseDone();
@@ -77,7 +84,7 @@ bool InOutOperator::out(QString barcode, QString photoUrl) {
 
 bool InOutOperator::isItemAlreadyOut(QString barcode) {
     if (db->IsItemOut(barcode)) {
-        speech->say("该快递已出库");
+        //        speech->say("该快递已出库");
         return true;
     }
     return false;
@@ -129,7 +136,9 @@ void InOutOperator::resetFilter() {
     filterStartOutDate.clear();
     filterEndOutDate.clear();
     filterString =
-        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now') and IsTaken = 1");
+        QString("strftime('%Y-%m-%d %H:%M:%S', OutDate) > strftime('%Y-%m-%d %H:%M:%S', '%1') and IsTaken = 1").arg(
+            localTimeNow);
+    //        QString("strftime('%Y-%m-%d', OutDate) >= date('now','-1 month') and strftime('%Y-%m-%d', OutDate) <= date('now') and IsTaken = 1");
     db->SetFilter(filterString);
 }
 

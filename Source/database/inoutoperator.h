@@ -99,6 +99,7 @@ class InOutOperator : public QObject {
     QString m_mostMonth;
     QString m_mostDay;
     void GetMost();
+    QString localTimeNow;
   signals:
     void updateDatabaseDone();
     void lineYearChanged();

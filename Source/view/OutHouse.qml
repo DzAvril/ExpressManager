@@ -57,17 +57,29 @@ Item {
             volume: 1
             source: "qrc:/resource/scaned.wav"
         }
+    Audio {
+        id: outSuccess
+        source: "qrc:/resource/outsuccess.wav";
+    }
+    Audio {
+        id: alreadyOut
+        source: "qrc:/resource/alreadyout.wav";
+    }
+    Audio {
+        id: barcodeEmpty
+        source: "qrc:/resource/noempty.wav";
+    }
 
     QZXingFilter{
         id: zxingFilter
-        captureRect: {
-            // setup bindings
-            barcodeVideoOut.contentRect;
-            barcodeVideoOut.sourceRect;
-            return barcodeVideoOut.mapRectToSource(barcodeVideoOut.mapNormalizedRectToItem(Qt.rect(
-                0.1, 0.1, 0.8, 0.8
-            )));
-        }
+//        captureRect: {
+//            // setup bindings
+//            barcodeVideoOut.contentRect;
+//            barcodeVideoOut.sourceRect;
+//            return barcodeVideoOut.mapRectToSource(barcodeVideoOut.mapNormalizedRectToItem(Qt.rect(
+//                0.1, 0.1, 0.8, 0.8
+//            )));
+//        }
         decoder {
             enabledDecoders: QZXing.DecoderFormat_CODE_128
             onTagFound: {
@@ -94,6 +106,8 @@ Item {
                             captureImage("/" + barcode.text + ".jpg");
                             captureExpOrder("/" + barcode.text + "_order.jpg")
                         } else {
+                            tipsLbl.text = "快递单号 " + barcode.text + " 已出库，勿重复出库";
+                            alreadyOut.play();
                             canProcessBarcode = true
                             barcode.text = ""
                             name.text = ""
@@ -129,6 +143,8 @@ Item {
         //since express-in fucntion is not implement yet, so we fake express-in process first
         if(inOutOperator.in(barcode.text, name.text, phone.text)){
             if(inOutOperator.out(barcode.text, clientPhotoUrl)) {
+                tipsLbl.text = "快递单号 " + barcode.text + " 出库成功";
+                outSuccess.play();
                 commonHelper.delay(500)
                 if(orderPhotoUrl !== "") {
                     inOutOperator.updateOrderPhoto(barcode.text, orderPhotoUrl)
@@ -136,6 +152,7 @@ Item {
                 return true;
             }
         }
+        tipsLbl.text = "快递单号 " + barcode.text + " 出库失败";
         return false;
     }
 
@@ -177,13 +194,16 @@ Item {
                 anchors.verticalCenter: barcodeSourceLable.verticalCenter
                 anchors.left: barcodeSourceLable.right
                 anchors.leftMargin: 5
-                currentIndex: 0
+                currentIndex: 1
                 model : QtMultimedia.availableCameras
 
                 textRole: "displayName"
                 onCurrentIndexChanged : {
                     if (currentIndex!=-1)
                         barcodeCamera.deviceId= QtMultimedia.availableCameras[currentIndex].deviceId
+                    barcodeCameraTip.visible = false
+                    barcodeCameraId.model = QtMultimedia.availableCameras
+                    barcodeCamera.start()
                 }
             }
 
@@ -206,16 +226,13 @@ Item {
                 focus {
                     focusPointMode: CameraFocus.FocusPointAuto
                 }
-                deviceId: QtMultimedia.availableCameras[0].deviceId
-                viewfinder.resolution: "1920x1080"
+                deviceId: QtMultimedia.availableCameras[1].deviceId
+                viewfinder.resolution: "1280x720"
                 viewfinder.maximumFrameRate: 30.00003000003
                 viewfinder.minimumFrameRate: 30.00003000003
-                imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceFlash
-                exposure {
-                    exposureCompensation: -1.0
-                    exposureMode: Camera.ExposurePortrait
-                }
-
+                imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceAuto
+                exposure.exposureMode: Camera.ExposureBarcode
+                imageCapture.resolution: "1920x1080"
                 onError: {
                     console.log("error of barcodeCamera " + errorString)
                     barcodeCameraTip.visible = true
@@ -240,7 +257,7 @@ Item {
                 anchors.topMargin: 30
                 source: barcodeCamera
                 focus : visible // to receive focus and capture key events when visible
-                filters: [zxingFilter]
+//                filters: [zxingFilter]
 
                 Text {
                     id: barcodeCameraTip
@@ -253,14 +270,14 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                 }
 
-                Rectangle {
-                    id: captureZone
-                    color: "white"
-                    opacity: 0.2
-                    width: parent.width * 4 / 5
-                    height: parent.height * 4 / 5
-                    anchors.centerIn: parent
-                }
+//                Rectangle {
+//                    id: captureZone
+//                    color: "white"
+//                    opacity: 0.2
+//                    width: parent.width * 4 / 5
+//                    height: parent.height * 4 / 5
+//                    anchors.centerIn: parent
+//                }
             }
 
             Item {
@@ -290,6 +307,25 @@ Item {
                     cursorVisible: true
                     font.pixelSize: 20
                     focus: true
+                    Keys.onReturnPressed: {
+                        if(barcode.text === "") {
+//                            speech.say("快递单号不能为空")
+                            tipsLbl.text = "快递单号不能为空";
+                            barcodeEmpty.play();
+                        } else {
+                            if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
+                                startFaceDetect = true;
+                                captureImage("/" + barcode.text + ".jpg");
+                                captureExpOrder("/" + barcode.text + "_order.jpg");
+                            } else {
+                                tipsLbl.text = "快递单号 " + barcode.text + " 已出库，勿重复出库";
+                                alreadyOut.play();
+                                barcode.text = ""
+                                name.text = ""
+                                phone.text = ""
+                            }
+                        }
+                    }
                 }
 
                 QC.Button {
@@ -303,12 +339,17 @@ Item {
                     anchors.leftMargin: 10
                     onClicked: {
                         if(barcode.text === "") {
-                            speech.say("快递单号不能为空")
+//                            speech.say("快递单号不能为空")
+                            tipsLbl.text = "快递单号不能为空";
+                            barcodeEmpty.play();
                         } else {
                             if(!inOutOperator.isItemAlreadyOut(barcode.text)) {
                                 startFaceDetect = true;
                                 captureImage("/" + barcode.text + ".jpg");
+                                captureExpOrder("/" + barcode.text + "_order.jpg");
                             } else {
+                                tipsLbl.text = "快递单号 " + barcode.text + " 已出库，勿重复出库";
+                                alreadyOut.play();
                                 barcode.text = ""
                                 name.text = ""
                                 phone.text = ""
@@ -410,13 +451,16 @@ Item {
                 anchors.verticalCenter: sourceLable.verticalCenter
                 anchors.left: sourceLable.right
                 anchors.leftMargin: 5
-                currentIndex: 1
+                currentIndex: 0
                 model : QtMultimedia.availableCameras
 
                 textRole: "displayName"
                 onCurrentIndexChanged : {
                     if (currentIndex!=-1)
                         camera.deviceId= QtMultimedia.availableCameras[currentIndex].deviceId
+                    faceCameraTip.visible = false
+                    cameraIds.model = QtMultimedia.availableCameras
+                    camera.start()
                 }
             }
 
@@ -441,7 +485,8 @@ Item {
                 anchors.leftMargin: 3
                 anchors.verticalCenter: faceCameraSourceBtn.verticalCenter
                 text: qsTr("人脸检测")
-                checked: true
+                enabled: false
+                checked: false
                 onCheckedChanged: {
                     if(!checked) {
                         faceBoard.visible = false;
@@ -454,8 +499,8 @@ Item {
                 focus {
                     focusPointMode: CameraFocus.FocusPointAuto
                 }
-                deviceId: QtMultimedia.availableCameras[1].deviceId
-                viewfinder.resolution: "1920x1080"
+                deviceId: QtMultimedia.availableCameras[0].deviceId
+                viewfinder.resolution: "1280x720"
                 viewfinder.maximumFrameRate: 30.00003000003
                 viewfinder.minimumFrameRate: 30.00003000003
                 onError: {
@@ -510,6 +555,15 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                 }
+            }
+
+            Label {
+                id: tipsLbl
+                font.family: "Arial"
+                font.pixelSize: 25
+                anchors.top: videoOut.bottom
+                anchors.topMargin: 20
+                anchors.left: videoOut.left
             }
 
 //            Image {

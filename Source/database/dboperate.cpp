@@ -275,6 +275,7 @@ void DbOperate::RefreshModel() {
 void DbOperate::SetFilter(QString &filterStr) {
     if (m_recordModel) {
         m_recordModel->setFilter(filterStr);
+        qDebug() << "filter string is " << m_recordModel->filter();
         m_recordModel->select();
     }
 }
