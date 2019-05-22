@@ -38,8 +38,9 @@ class InOutOperator : public QObject {
     Q_INVOKABLE int getExpCountFromDateRange(QString start, QString end);
     Q_INVOKABLE int getExpCountOfMonth(QString year);
     Q_INVOKABLE int getExpCountOfDay(QString year, QString month);
-    Q_INVOKABLE bool deleteRow(int row);
+    Q_INVOKABLE bool deleteAndUpdate(int row);
     Q_INVOKABLE bool markUnOut(int row);
+    Q_INVOKABLE bool deleteAll();
     QStringList  yearList();
     inline QLineSeries *lineYear() {
         return m_lineYear;
@@ -100,6 +101,7 @@ class InOutOperator : public QObject {
     QString m_mostDay;
     void GetMost();
     QString localTimeNow;
+    bool deleteRow(int row);
   signals:
     void updateDatabaseDone();
     void lineYearChanged();

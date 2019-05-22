@@ -230,19 +230,12 @@ int InOutOperator::getExpCountOfDay(QString year, QString month) {
     return (max % 10 == 0) && (max != 0) ? max : ((max / 10) + 1) * 10;
 }
 
-bool InOutOperator::deleteRow(int row) {
-    QString expOrderPhotoUrl = recordModel->record(row).value(db->EXPORDERPHOTOURL).toString();
-    QString clientPhotoUrl = recordModel->record(row).value(db->CLIENTPHOTURL).toString();
-    if (recordModel->removeRow(row)) {
-        if (recordModel->submit()) {
-            fileIo->DeleteFile(expOrderPhotoUrl);
-            fileIo->DeleteFile(clientPhotoUrl);
-            db->SetFilter(filterString);
-            emit updateDatabaseDone();
-            return true;
-        }
+bool InOutOperator::deleteAndUpdate(int row) {
+    if (deleteRow(row)) {
+        db->SetFilter(filterString);
+        emit updateDatabaseDone();
+        return true;
     }
-    qDebug() << "Delete row error : " << recordModel->lastError().text();
     return false;
 }
 
@@ -265,6 +258,17 @@ bool InOutOperator::markUnOut(int row) {
         return true;
     }
     return false;
+}
+
+bool InOutOperator::deleteAll() {
+    for (int i = 0; i < recordModel->rowCount(); ++i) {
+        if (!deleteRow(i)) {
+            return false;
+        }
+    }
+    db->SetFilter(filterString);
+    emit updateDatabaseDone();
+    return true;
 }
 
 QStringList InOutOperator::yearList() {
@@ -449,4 +453,18 @@ void InOutOperator::GetMost() {
     dayModel->select();
     emit mostDayChanged();
     emit mostDayNumberChanged();
+}
+
+bool InOutOperator::deleteRow(int row) {
+    QString expOrderPhotoUrl = recordModel->record(row).value(db->EXPORDERPHOTOURL).toString();
+    QString clientPhotoUrl = recordModel->record(row).value(db->CLIENTPHOTURL).toString();
+    if (recordModel->removeRow(row)) {
+        if (recordModel->submit()) {
+            fileIo->DeleteFile(expOrderPhotoUrl);
+            fileIo->DeleteFile(clientPhotoUrl);
+            return true;
+        }
+    }
+    qDebug() << "Delete row error : " << recordModel->lastError().text();
+    return false;
 }

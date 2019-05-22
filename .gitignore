@@ -76,3 +76,4 @@ debug/
 release/
 pack/
 pack.zip
+.vscode/

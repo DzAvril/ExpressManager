@@ -125,7 +125,7 @@ Item {
                 standardButtons: StandardButton.Ok | StandardButton.Cancel
 
                 onAccepted: {
-                    if(inOutOperator.deleteRow(tableView.currentRow)) {
+                    if(inOutOperator.deleteAndUpdate(tableView.currentRow)) {
                         tableView.selection.clear()
                     }
                 }
@@ -374,6 +374,34 @@ Item {
                 inOutOperator.resetFilter();
             }
         }
+
+        QC.Button {
+            id: deleteBtn
+            anchors.bottom: resetBtn.bottom
+            anchors.left: resetBtn.right
+            anchors.leftMargin: 10
+            height: resetBtn.height
+            width: auto
+            text: "删除记录"
+            onClicked: {
+                deleteBtnMsgDig.open();
+            }
+        }
+
+        MessageDialog {
+            id: deleteBtnMsgDig
+            title: "删除？"
+            icon: StandardIcon.Warning
+            text: "将删除当前显示的所有记录，是否执行？"
+            standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+            onAccepted: {
+                deletingIncicator.running = true;
+                inOutOperator.deleteAll();
+                deletingIncicator.running = false;
+            }
+            onRejected: deleteBtnMsgDig.close()
+        }
     }
     GaussianBlur {
         id: bulr
@@ -425,6 +453,20 @@ Item {
                 }
             }
         }
+    }
+    BusyIndicator {
+        id: deletingIncicator
+        running: false
+        anchors.centerIn: parent
+    }
+    Text {
+        text: qsTr("删除中...")
+        anchors.top: deletingIncicator.bottom
+        anchors.topMargin: 5
+        anchors.horizontalCenter: deletingIncicator.horizontalCenter
+        visible: deletingIncicator.running
+        font.pointSize: 10
+        font.family: "Arial"
     }
 }
 
